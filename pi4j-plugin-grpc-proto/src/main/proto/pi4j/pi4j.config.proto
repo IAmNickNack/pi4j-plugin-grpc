@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.github.iamnicknack.pi4j.grpc.gen.config";
+
+/**
+ * Configuration operations
+ */
+package pi4j.config;
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// Configuration
+///////////////////////////////////////////////////////////////////////////////////////
+
+service DeviceConfigService {
+  rpc CreateDevice(DeviceConfigPayload) returns (DeviceConfigPayload) {}
+  rpc RemoveDevice(DeviceRequest) returns (Empty) {}
+  rpc FetchDeviceConfig(DeviceRequest) returns (DeviceConfigPayload) {}
+  rpc FetchCurrentDeviceConfigs(DeviceListRequest) returns (DeviceListResponse) {}
+}
+
+message DeviceRequest {
+  DeviceType deviceType = 1;
+  string deviceId = 2;
+}
+
+message DeviceListResponse {
+  repeated DeviceConfigPayload device = 1;
+}
+
+message DeviceListRequest {
+  DeviceType deviceType = 1;
+}
+
+message DeviceConfigPayload {
+  DeviceType deviceType = 1;
+  map<string, string> config = 2;
+}
+
+enum DeviceType {
+  DIGITAL_INPUT = 0;
+  DIGITAL_OUTPUT = 1;
+  PWM = 2;
+  I2C = 3;
+  SPI = 4;
+}
+
+message Empty {}

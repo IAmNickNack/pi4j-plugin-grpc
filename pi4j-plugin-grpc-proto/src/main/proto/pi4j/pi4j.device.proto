@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.github.iamnicknack.pi4j.grpc.gen.device";
+
+package pi4j;
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// Digital devices
+///////////////////////////////////////////////////////////////////////////////////////
+
+service DigitalInputService {
+  rpc GetState (GetDigitalStateRequest) returns (DigitalStateResponse) {}
+  rpc AddListener(DeviceIdRequest) returns (stream DigitalStateResponse);
+}
+
+service DigitalOutputService {
+  rpc GetState (GetDigitalStateRequest) returns (DigitalStateResponse) {}
+  rpc SetState (SetDigitalStateRequest) returns (DigitalStateResponse) {}
+  rpc AddListener(DeviceIdRequest) returns (stream DigitalStateResponse);
+}
+
+message GetDigitalStateRequest {
+  string deviceId = 1;
+}
+
+message SetDigitalStateRequest {
+  string deviceId = 1;
+  DeviceState state = 2;
+}
+
+message DigitalStateResponse {
+  DeviceState state = 1;
+}
+
+enum DeviceState {
+  LOW = 0;
+  HIGH = 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// PWM
+///////////////////////////////////////////////////////////////////////////////////////
+
+service PwmService {
+  rpc SetEnabled(BooleanDeviceRequest) returns (BooleanResponse) {}
+  rpc GetEnabled(DeviceIdRequest) returns (BooleanResponse) {}
+  rpc SetDutyCycle(IntegerDeviceRequest) returns (IntegerResponse) {}
+  rpc GetDutyCycle(DeviceIdRequest) returns (IntegerResponse) {}
+  rpc SetFrequency(IntegerDeviceRequest) returns (IntegerResponse) {}
+  rpc GetFrequency(DeviceIdRequest) returns (IntegerResponse) {}
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// SPI
+///////////////////////////////////////////////////////////////////////////////////////
+
+service SpiService {
+  rpc Transfer(DataRequest) returns (DataResponse);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// I2C
+///////////////////////////////////////////////////////////////////////////////////////
+
+service I2CService {
+  rpc Read(IntegerDeviceRequest) returns (DataResponse);
+  rpc Write(DataRequest) returns (IntegerResponse);
+  rpc ReadRegister(ReadRegisterRequest) returns (DataResponse);
+  rpc WriteRegister(WriteRegisterRequest) returns (IntegerResponse);
+}
+
+message ReadRegisterRequest {
+  string deviceId = 1;
+  int32 register = 2;
+  int32 length = 3;
+}
+
+message WriteRegisterRequest {
+  string deviceId = 1;
+  int32 register = 2;
+  bytes payload = 3;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+/// Common types
+///////////////////////////////////////////////////////////////////////////////////////
+
+message DeviceIdRequest {
+  string deviceId = 1;
+}
+
+message BooleanDeviceRequest {
+  string deviceId = 1;
+  bool value = 2;
+}
+
+message BooleanResponse {
+  bool value = 1;
+}
+
+message IntegerDeviceRequest {
+  string deviceId = 1;
+  int32 value = 2;
+}
+
+message IntegerResponse {
+  int32 value = 1;
+}
+
+message DataRequest {
+  string deviceId = 1;
+  bytes payload = 2;
+}
+
+message DataResponse {
+  bytes payload = 1;
+}

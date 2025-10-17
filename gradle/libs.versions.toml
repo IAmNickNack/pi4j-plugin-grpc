@@ -1,0 +1,55 @@
+[versions]
+
+assertj = "3.27.4"
+assertk = "0.28.1"
+junit = "5.13.4"
+kotlin = "2.2.20"
+kotlin-coroutines = "1.8.1"
+logback = "1.5.18"
+slf4j = "2.0.17"
+
+grpc-core = "1.75.0"
+grpc-kotlin = "1.4.3"
+protobuf = "4.32.1"
+
+shadow = "9.2.0"
+
+pi4j = "4.0.0-SNAPSHOT"
+
+[libraries]
+
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
+kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+
+pi4j-core = { module = "com.pi4j:pi4j-core", version.ref = "pi4j" }
+pi4j-plugin-mock = { module = "com.pi4j:pi4j-plugin-mock", version.ref = "pi4j" }
+pi4j-plugin-ffm = { module = "com.pi4j:pi4j-plugin-ffm", version.ref = "pi4j" }
+
+grpc-protobuf = { group = "io.grpc", name = "grpc-protobuf", version.ref = "grpc-core" }
+grpc-netty = { group = "io.grpc", name = "grpc-netty", version.ref = "grpc-core" }
+grpc-testing = { group = "io.grpc", name = "grpc-testing", version.ref = "grpc-core" }
+grpc-services = { group = "io.grpc", name = "grpc-services", version.ref = "grpc-core" }
+grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc-core" }
+grpc-kotlin-stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc-kotlin" }
+grpc-inprocess = { group = "io.grpc", name = "grpc-inprocess", version.ref = "grpc-core" }
+
+protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
+protoc-gen-grpc-java = { group = "io.grpc", name = "protoc-gen-grpc-java", version.ref = "grpc-core" }
+protoc-gen-grpc-kotlin = { group = "io.grpc", name = "protoc-gen-grpc-kotlin", version.ref = "grpc-kotlin" }
+
+
+[bundles]
+
+pi4j = ["pi4j-core", "pi4j-plugin-mock", "pi4j-plugin-ffm"]
+
+[plugins]
+
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
