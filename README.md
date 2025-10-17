@@ -1,8 +1,8 @@
 # Pi4J gRPC Plugin
 
 This plugin intends to provide remote development support for PI4J in the absence of 
-[pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) support for the Raspberry Pi v5. They assume that convenience 
-is more important than performance during the development phase of a project and intend make existing Pi4j APIs 
+[pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) support for the Raspberry Pi v5. It assumes that convenience 
+is more important than performance during the development phase of a project and intends to make existing Pi4j APIs 
 accessible via gRPC.
 
 Current supported providers extend to:
