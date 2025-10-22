@@ -29,7 +29,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-           .gradle/configuration-cache
+            .gradle/configuration-cache
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle.properties', '**/gradle/libs.versions.toml') }}
 
       - name: Build with Gradle
