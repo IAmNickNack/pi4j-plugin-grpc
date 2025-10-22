@@ -15,22 +15,21 @@ import com.pi4j.plugin.ffm.providers.spi.SpiFFMProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl
 import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl
+import io.github.iamnicknack.pi4j.grpc.client.GrpcChannelSupplier
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider
-import io.grpc.Grpc
-import io.grpc.InsecureChannelCredentials
+import io.grpc.Channel
 
 class SevenSegment : AutoCloseable {
 
+    val channel: Channel? by lazy {
+        GrpcChannelSupplier().get()
+    }
+
     val pi4j: Context by lazy {
-        when (System.getProperty("pi4j.plugin", "mock")) {
-            "grpc" -> {
-                val channel = Grpc.newChannelBuilderForAddress(
-                    System.getProperty("pi4j.grpc.host"),
-                    System.getProperty("pi4j.grpc.port", "9090").toInt(),
-                    InsecureChannelCredentials.create()
-                ).build()
+        when (System.getProperty("pi4j.plugin", "grpc")) {
+            "grpc" if (channel != null) -> {
                 Pi4J.newContextBuilder()
                     .add(GrpcDigitalOutputProvider(channel))
                     .add(GrpcPwmProvider(channel))

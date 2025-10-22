@@ -11,16 +11,13 @@ import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputPro
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider;
-import io.grpc.Grpc;
-import io.grpc.InsecureChannelCredentials;
 import io.grpc.ManagedChannel;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.*;
 
 /**
- * This currently doesn't work with the Pi4J plugin architecture due to issues providing module information
- * for the protobuf generated classes.
+ * {@link Plugin} which registers providers and manages the gRPC channel lifecycle
  */
 public class GrpcPlugin implements Plugin {
 
@@ -30,17 +27,11 @@ public class GrpcPlugin implements Plugin {
 
     @Override
     public void initialize(PluginService service) throws InitializeException {
-        if (service.context().properties().has("pi4j.grpc.host") &&
-                service.context().properties().has("pi4j.grpc.port")) {
-            var host = service.context().properties().get("pi4j.grpc.host");
-            var port = service.context().properties().getInteger("pi4j.grpc.port");
 
-            logger.info("Initializing gRPC plugin for {}:{}", host, port);
+        var channelProvider = new GrpcChannelSupplier(service.context());
+        channel = channelProvider.get();
 
-            channel = Grpc
-                    .newChannelBuilder(host + ":" + port, InsecureChannelCredentials.create())
-                    .build();
-
+        if (channel != null) {
             var plugins = new Provider<?, ?, ?>[] {
                     new GrpcDigitalInputProvider(channel),
                     new GrpcDigitalOutputProvider(channel),
@@ -50,6 +41,8 @@ public class GrpcPlugin implements Plugin {
             };
 
             service.register(plugins);
+        } else {
+            logger.warn("Skipping initialisation of gRPC plugin. `pi4j.grpc.host` and/or `pi4j.grpc.port` not provided.");
         }
     }
 

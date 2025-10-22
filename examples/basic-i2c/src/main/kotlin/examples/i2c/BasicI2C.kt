@@ -9,22 +9,21 @@ import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
 import com.pi4j.plugin.ffm.providers.i2c.I2CFFMProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl
+import io.github.iamnicknack.pi4j.grpc.client.GrpcChannelSupplier
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider
-import io.grpc.Grpc
-import io.grpc.InsecureChannelCredentials
+import io.grpc.Channel
 
 
 class BasicI2C : AutoCloseable {
 
-    val host: String by lazy {
-        System.getProperty("pi4j.host", "localhost:8080")
+    val channel: Channel? by lazy {
+        GrpcChannelSupplier().get()
     }
 
     val pi4j: Context by lazy {
-        when (System.getProperty("pi4j.plugin", "mock")) {
-            "grpc" -> {
-                val channel = Grpc.newChannelBuilder(host, InsecureChannelCredentials.create()).build()
+        when (System.getProperty("pi4j.plugin", "grpc")) {
+            "grpc" if (channel != null) -> {
                 Pi4J.newContextBuilder()
                     .add(GrpcDigitalOutputProvider(channel))
                     .add(GrpcI2CProvider(channel))

@@ -44,7 +44,8 @@ import org.slf4j.LoggerFactory
  * @param channelConfigurer A function to configure the gRPC channel. Defaults to [DEFAULT_CHANNEL_CONFIGURER].
  */
 class ServerContext(
-    pluginPreference: String? = PLUGIN_PROPERTY_DEFAULT,
+    pluginPreference: String = PLUGIN_PROPERTY_DEFAULT,
+    private val serverPort: Int = System.getProperty(SERVER_PORT_PROPERTY, "9090").toInt(),
     private val proxyHost: String? = null,
     private val proxyPort: Int? = null,
     private val channelConfigurer: ChannelConfigurer = DEFAULT_CHANNEL_CONFIGURER
@@ -63,7 +64,8 @@ class ServerContext(
             .toMap(),
         channelConfigurer: ChannelConfigurer = DEFAULT_CHANNEL_CONFIGURER
     ) : this(
-        properties[PLUGIN_PROPERTY],
+        properties[PLUGIN_PROPERTY] ?: PLUGIN_PROPERTY_DEFAULT,
+        properties[SERVER_PORT_PROPERTY]?.toInt() ?: 9090,
         properties[HOST_PROPERTY],
         properties[PORT_PROPERTY]?.toInt(),
         channelConfigurer
@@ -142,7 +144,7 @@ class ServerContext(
      * A singleton gRPC server instance.
      */
     val server: Server by lazy {
-        ServerBuilder.forPort(System.getProperty(SERVER_PORT_PROPERTY, "9090").toInt())
+        ServerBuilder.forPort(serverPort)
             .addService(DigitalInputService(pi4j))
             .addService(DigitalOutputService(pi4j))
             .addService(PwmService(pi4j))
@@ -166,6 +168,7 @@ class ServerContext(
         )
 
         server.start()
+        logger.info("gRPC server listening on $serverPort")
         server.awaitTermination()
     }
 

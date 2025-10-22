@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.pi4j.core)
     implementation(libs.pi4j.plugin.mock)
     implementation(libs.pi4j.plugin.ffm)
+    implementation(libs.logback.classic)
 }
 
 application {

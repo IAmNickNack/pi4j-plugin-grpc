@@ -6,24 +6,21 @@ import com.pi4j.io.gpio.digital.DigitalOutput
 import com.pi4j.io.gpio.digital.DigitalState
 import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
+import io.github.iamnicknack.pi4j.grpc.client.GrpcChannelSupplier
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider
-import io.grpc.Grpc
-import io.grpc.InsecureChannelCredentials
+import io.grpc.Channel
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicInteger
 
 class GpioEvents : AutoCloseable {
 
-//    -Dpi4j.plugin=grpc -Dpi4j.host=10.0.0.2:9090
-
-    val host: String by lazy {
-        System.getProperty("pi4j.host", "localhost:8080")
+    val channel: Channel? by lazy {
+        GrpcChannelSupplier().get()
     }
 
     val pi4j: Context by lazy {
-        when (System.getProperty("pi4j.plugin", "mock")) {
-            "grpc" -> {
-                val channel = Grpc.newChannelBuilder(host, InsecureChannelCredentials.create()).build()
+        when (System.getProperty("pi4j.plugin", "grpc")) {
+            "grpc" if (channel != null) -> {
                 Pi4J.newContextBuilder()
                     .add(GrpcDigitalOutputProvider(channel))
                     .build()
@@ -44,7 +41,6 @@ class GpioEvents : AutoCloseable {
             .shutdown(DigitalState.LOW)
             .build()
     )
-
 
     override fun close() {
         pi4j.shutdown()
