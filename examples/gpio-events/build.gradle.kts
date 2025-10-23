@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.pi4j.core)
     implementation(libs.pi4j.plugin.mock)
     implementation(libs.pi4j.plugin.ffm)
+    runtimeOnly(libs.logback.classic)
 }
 
 application {
@@ -29,4 +30,27 @@ application {
 tasks.withType<ShadowJar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     mergeServiceFiles()
+}
+
+/**
+ * When referencing the package manager for the Github repo, this needs to be configured to:
+ * - Authenticate using a Github PAT
+ * - Only pull packages contained in that repo
+ */
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = uri("https://maven.pkg.github.com/iamnicknack/pi4j-grpc-plugin")
+                credentials {
+                    username = System.getenv("GITHUB_USERNAME")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+        filter {
+            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc")
+            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc-server")
+        }
+    }
 }

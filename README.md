@@ -1,8 +1,8 @@
 # Pi4J gRPC Plugin
 
 This plugin intends to provide remote development support for PI4J in the absence of 
-[pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) support for the Raspberry Pi v5. They assume that convenience 
-is more important than performance during the development phase of a project and intend make existing Pi4j APIs 
+[pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) support for the Raspberry Pi v5. It assumes that convenience 
+is more important than performance during the development phase of a project and intends to make existing Pi4j APIs 
 accessible via gRPC.
 
 Current supported providers extend to:
@@ -60,8 +60,26 @@ plugin to provide remote development support for projects use Pi4j but do not ha
 Once built, as described above, the server can be started by invoking the shadow jar:
 
 ```bash
-./pi4j-grpc/pi4j-plugin-grpc-server/start-server.sh <port>
+./pi4j-plugin-grpc-server/start-server.sh <port>
 ```
+
+Alternatively, start the shadow jar:
+
+```bash
+java -jar ./pi4j-plugin-grpc-server/build/libs/pi4j-plugin-grpc-server-all.jar
+```
+
+#### Server Plugin Detection
+
+Unless otherwise specified, the server will start and auto-detect Pi4j plugins. 
+
+Auto-detection can be overridden by providing the `pi4j.plugin` system property:
+
+* `-Dpi4j.plugin=ffm`: forces the FFM plugin to be loaded
+* `-Dpi4j.plugin=mock`: loads the mock plugin. This can be useful for testing and allows the server to run on machines
+with no GPIO access.
+* `-Dpi4j.plugin.grpc -Dpi4j.grpc.server=<hostname> -Dpi4j.grpc.port=<port>`: starts the server as a proxy to another
+server instance. The utility of this is slightly questionable ;)
 
 ## Examples
 
@@ -70,18 +88,19 @@ At least within an IDE.
 
 All examples are packaged as executable JARs and can be run directly from the command line after a successful build.
 
-System properties can be provided to configure the examples depnding on the use case:
+System properties can be provided to configure the examples depending on the use case:
 
-* `-Dpi4j.host` - the `host:port` to bind the plugin to
-* `-Dpi4j.plugin` - the plugin to use (either `http` or `grpc`). If not provided, defaults to `mock` and runs
-without any hardware access.
+* `-Dpi4j.grpc.host` - the host to bind the plugin to
+* `-Dpi4j.grpc.port` - the port to bind the plugin to
+* `-Dpi4j.plugin` - the plugin to use (either `http` or `grpc`). If not provided, defaults to `grpc`. 
+Any other value results in `mock` and runs without any hardware access.
 
 ### Basic I2C
 
 Demonstrates `DigitalOuptut` and `I2C` access.
 
 ```bash
-java -Dpi4j.plugin=grpc -Dpij4.host=localhost:9090 -jar ./examples/basic-i2c/build/libs/basic-i2c-all.jar
+java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/basic-i2c/build/libs/basic-i2c-all.jar
 ```
 
 ### Gpio Events
@@ -89,7 +108,7 @@ java -Dpi4j.plugin=grpc -Dpij4.host=localhost:9090 -jar ./examples/basic-i2c/bui
 Demonstrates `DigitalOuptut` access with event listeners.
 
 ```bash
-java java -Dpi4j.plugin=grpc -Dpi4j.host=localhost:9090 -jar ./examples/gpio-events/build/libs/gpio-events-all.jar
+java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/gpio-events/build/libs/gpio-events-all.jar
 ```
 
 ### Seven Segment
@@ -98,5 +117,5 @@ Demonstrates `DigitalOuptut`, `Pwm` and `Spi` access in the unlikely event that 
 this example might display an incrementing counter on a seven-segment display.
 
 ```bash
-java -Dpi4j.plugin=grpc -Dpi4j.host=localhost:9090 -jar ./examples/seven-segment/build/libs/seven-segment-all.jar
+java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/seven-segment/build/libs/seven-segment-all.jar
 ```

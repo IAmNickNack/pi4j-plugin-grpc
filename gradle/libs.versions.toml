@@ -2,10 +2,11 @@
 
 assertj = "3.27.4"
 assertk = "0.28.1"
+jakarta-annotation = "3.0.0"
 junit = "5.13.4"
 kotlin = "2.2.20"
 kotlin-coroutines = "1.8.1"
-logback = "1.5.18"
+logback = "1.5.20"
 slf4j = "2.0.17"
 
 grpc-core = "1.75.0"
@@ -20,6 +21,7 @@ pi4j = "4.0.0-SNAPSHOT"
 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
+jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakarta-annotation" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
