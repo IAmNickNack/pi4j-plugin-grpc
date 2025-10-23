@@ -19,10 +19,13 @@ client or server implementations.
 This project includes a reference implementation of the server application, which uses the existing Pi4j 
 library to provide hardware integration.
 
-## Install
+Schema definitions are contained in
+[./pi4j-plugin-grpc-proto/src/main/proto/pi4j](./pi4j-grpc/pi4j-plugin-grpc-proto/src/main/proto/pi4j)
 
-There are currently no binary distributions available, but both the client and server-side components can be built
-from source for Java 24:
+
+## Install From Source
+
+Both the client and server-side components can be built from source for Java 24:
 
 ```bash
 # Clone the repository and build the plugin
@@ -31,31 +34,66 @@ git clone https://github.com/iamnicknack/pi4j-plugin-grpc.git
 ./gradlew publishToMavenLocal   
 ```
 
-## pi4j-plugin-grpc
-
-Schema definitions are contained in 
-[./pi4j-plugin-grpc-proto/src/main/proto/pi4j](./pi4j-grpc/pi4j-plugin-grpc-proto/src/main/proto/pi4j)
-
 ### Maven
 
 ```xml
 <dependency>
     <groupId>io.github.iamnicknack.pi4j</groupId>
     <artifactId>pi4j-plugin-grpc</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("io.github.iamnicknack.pi4j:pi4j-plugin-grpc:0.0.1")
+implementation("io.github.iamnicknack.pi4j:pi4j-plugin-grpc:0.0.1-SNAPSHOT")
 ```
 
-### Server Implementation
+## Install from Github Packages
+
+Builds are currently published to Github Packages. In order to pull packages using Maven or Gradle, you will need
+to add the registry configuration to your build,
+as documented on Github for Maven [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
+and Gradle [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package).
+
+### Gradle Repository Configuration:
+
+Gradle allows the use of `exclusiveContent`, meaning that the repository will only be queried for the specified
+packages:
+
+```kotlin
+/**
+ * When referencing the package manager for the Github repo, this needs to be configured to:
+ * - Authenticate using a Github PAT
+ * - Only pull packages contained in that repo
+ */
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = uri("https://maven.pkg.github.com/iamnicknack/pi4j-grpc-plugin")
+                credentials {
+                    username = System.getenv("GITHUB_USERNAME")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+        filter {
+            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc")
+            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc-server")
+        }
+    }
+}
+```
+
+## Server Implementation
 
 The server is simply a gRPC proxy exposing the Pi4j library. It is intended to be used in conjunction with the client
 plugin to provide remote development support for projects use Pi4j but do not have access to a Pi4j compatible device.
+
+A shadow jar will be generated as part of the build output, but is also downloadable from the 
+[repository releases](https://github.com/IAmNickNack/pi4j-plugin-grpc/releases). 
 
 Once built, as described above, the server can be started by invoking the shadow jar:
 
@@ -69,7 +107,7 @@ Alternatively, start the shadow jar:
 java -jar ./pi4j-plugin-grpc-server/build/libs/pi4j-plugin-grpc-server-all.jar
 ```
 
-#### Server Plugin Detection
+### Server Plugin Detection
 
 Unless otherwise specified, the server will start and auto-detect Pi4j plugins. 
 

@@ -18,9 +18,9 @@ publishing {
     }
     publications {
         register<MavenPublication>("gpr") {
-            groupId = "io.github.iamnicknack.pi4j"
+            groupId = project.group as String
             artifactId = project.name
-            version = "0.0.1-SNAPSHOT"
+            version = project.version as String
             // Only publish the standard JAR. No shadow jars
             artifact(tasks.named<Jar>("jar").get())
         }
