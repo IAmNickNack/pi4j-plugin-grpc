@@ -7,7 +7,6 @@ module pi4j.plugin.grpc {
     requires io.grpc.stub;
     requires jakarta.annotation;
     requires org.slf4j;
-    requires org.checkerframework.checker.qual;
 
     exports io.github.iamnicknack.pi4j.grpc.client;
     exports io.github.iamnicknack.pi4j.grpc.client.provider.gpio;
