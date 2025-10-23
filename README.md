@@ -60,8 +60,26 @@ plugin to provide remote development support for projects use Pi4j but do not ha
 Once built, as described above, the server can be started by invoking the shadow jar:
 
 ```bash
-./pi4j-grpc/pi4j-plugin-grpc-server/start-server.sh <port>
+./pi4j-plugin-grpc-server/start-server.sh <port>
 ```
+
+Alternatively, start the shadow jar:
+
+```bash
+java -jar ./pi4j-plugin-grpc-server/build/libs/pi4j-plugin-grpc-server-all.jar
+```
+
+#### Server Plugin Detection
+
+Unless otherwise specified, the server will start and auto-detect Pi4j plugins. 
+
+Auto-detection can be overridden by providing the `pi4j.plugin` system property:
+
+* `-Dpi4j.plugin=ffm`: forces the FFM plugin to be loaded
+* `-Dpi4j.plugin=mock`: loads the mock plugin. This can be useful for testing and allows the server to run on machines
+with no GPIO access.
+* `-Dpi4j.plugin.grpc -Dpi4j.grpc.server=<hostname> -Dpi4j.grpc.port=<port>`: starts the server as a proxy to another
+server instance. The utility of this is slightly questionable ;)
 
 ## Examples
 
@@ -74,8 +92,8 @@ System properties can be provided to configure the examples depending on the use
 
 * `-Dpi4j.grpc.host` - the host to bind the plugin to
 * `-Dpi4j.grpc.port` - the port to bind the plugin to
-* `-Dpi4j.plugin` - the plugin to use (either `http` or `grpc`). If not provided, defaults to `mock` and runs
-without any hardware access.
+* `-Dpi4j.plugin` - the plugin to use (either `http` or `grpc`). If not provided, defaults to `grpc`. 
+Any other value results in `mock` and runs without any hardware access.
 
 ### Basic I2C
 
