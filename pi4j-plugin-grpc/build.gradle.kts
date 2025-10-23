@@ -8,6 +8,7 @@ plugins {
 
 dependencies {
     implementation(libs.bundles.pi4j)
+    implementation(libs.jakarta.annotation)
 
     testImplementation(project(":pi4j-plugin-grpc-server"))
     testImplementation(libs.grpc.testing)

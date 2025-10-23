@@ -11,6 +11,8 @@ import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputPro
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider;
+import io.grpc.Grpc;
+import io.grpc.InsecureChannelCredentials;
 import io.grpc.ManagedChannel;
 import org.slf4j.Logger;
 
@@ -28,10 +30,15 @@ public class GrpcPlugin implements Plugin {
     @Override
     public void initialize(PluginService service) throws InitializeException {
 
-        var channelProvider = new GrpcChannelSupplier(service.context());
-        channel = channelProvider.get();
-
-        if (channel != null) {
+        var hostAndPort = GrpcHostAndPort.fromContext(service.context());
+        if (hostAndPort != null) {
+            channel = Grpc
+                    .newChannelBuilderForAddress(
+                            hostAndPort.host(),
+                            hostAndPort.port(),
+                            InsecureChannelCredentials.create()
+                    )
+                    .build();
             var plugins = new Provider<?, ?, ?>[] {
                     new GrpcDigitalInputProvider(channel),
                     new GrpcDigitalOutputProvider(channel),
