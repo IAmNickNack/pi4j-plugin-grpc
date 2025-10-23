@@ -1,19 +1,19 @@
 [versions]
 
-assertj = "3.27.4"
+assertj = "3.27.6"
 assertk = "0.28.1"
 jakarta-annotation = "3.0.0"
-junit = "5.13.4"
-kotlin = "2.2.20"
-kotlin-coroutines = "1.8.1"
+junit = "6.0.0"
+kotlin = "2.2.21"
+kotlin-coroutines = "1.10.2"
 logback = "1.5.20"
 slf4j = "2.0.17"
 
-grpc-core = "1.75.0"
-grpc-kotlin = "1.4.3"
-protobuf = "4.32.1"
+grpc-core = "1.76.0"
+grpc-kotlin = "1.5.0"
+protobuf = "4.33.0"
 
-shadow = "9.2.0"
+shadow = "9.2.2"
 
 pi4j = "4.0.0-SNAPSHOT"
 
