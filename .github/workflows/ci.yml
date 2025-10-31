@@ -9,8 +9,13 @@ on:
     branches:
       - main
       - develop
-
   workflow_dispatch:
+    inputs:
+      manual_release:
+        description: 'Perform a release'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -29,4 +34,15 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew --configuration-cache build
+
+      - name: Do Release
+        if: github.ref == 'refs/heads/main' || github.event.inputs.manual_release == 'true'
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+        run: |
+          ./gradlew --configuration-cache publish
+          ./.github/scripts/perform-release.sh
