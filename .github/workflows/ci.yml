@@ -42,4 +42,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
+          ./gradlew publish
           ./.github/scripts/perform-release.sh
