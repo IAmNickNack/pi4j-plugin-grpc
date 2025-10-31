@@ -39,5 +39,7 @@ jobs:
 
       - name: Do Release
         if: github.ref == 'refs/heads/main' || github.event.inputs.manual_release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           ./.github/scripts/perform-release.sh
