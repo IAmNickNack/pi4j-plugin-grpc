@@ -2,6 +2,7 @@
 
 BUILD_VERSION=$(./gradlew :pi4j-plugin-grpc:properties -q | grep 'version:' | awk '{print $2}')
 DIST_ZIP=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}.zip")
+SHADOW_JAR=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}-all.jar")
 
 # Stop if DIST_ZIP is empty
 if [ -z "${DIST_ZIP}" ]; then
@@ -49,7 +50,7 @@ if [ "${RELEASE_EXISTS}" = "false" ]; then
 fi
 
 echo "Uploading ${DIST_ZIP} to v${BUILD_VERSION}"
-gh release upload "v${BUILD_VERSION}" "${DIST_ZIP}" --clobber
+gh release upload "v${BUILD_VERSION}" "${DIST_ZIP}" "${SHADOW_JAR}" --clobber
 RC=$?
 if [ ${RC} -ne 0 ]; then
   echo "ERROR: Failed to upload asset to existing release v${BUILD_VERSION}"

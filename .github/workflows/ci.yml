@@ -40,8 +40,8 @@ jobs:
       - name: Do Release
         if: github.ref == 'refs/heads/main' || github.event.inputs.manual_release == 'true'
         env:
-          GITHUB_USERNAME: ${{ github.actor }}        # map actor -> GITHUB_USERNAME
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}  # map secret -> GITHUB_TOKEN
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
           ./gradlew --configuration-cache publish
