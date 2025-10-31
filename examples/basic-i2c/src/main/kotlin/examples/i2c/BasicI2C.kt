@@ -5,6 +5,7 @@ import com.pi4j.context.Context
 import com.pi4j.io.gpio.digital.DigitalOutput
 import com.pi4j.io.gpio.digital.DigitalState
 import com.pi4j.io.i2c.I2C
+import com.pi4j.io.i2c.I2CImplementation
 import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
 import com.pi4j.plugin.ffm.providers.i2c.I2CFFMProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
@@ -59,6 +60,7 @@ class BasicI2C : AutoCloseable {
             .id("mcp23008")
             .bus(1)
             .device(0x20)
+            .i2cImplementation(I2CImplementation.DIRECT)
             .build()
     )
 
@@ -76,7 +78,6 @@ class BasicI2C : AutoCloseable {
         pi4j.shutdown()
     }
 }
-
 
 fun main() {
     BasicI2C().use { basicI2C ->

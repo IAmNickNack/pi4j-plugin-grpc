@@ -51,25 +51,7 @@ class ServerContext(
     private val channelConfigurer: ChannelConfigurer = DEFAULT_CHANNEL_CONFIGURER
 ) {
 
-    private val pluginPreference: String = pluginPreference?.lowercase() ?: PLUGIN_PROPERTY_DEFAULT
-
-    /**
-     * Create a new server context with the given property map.
-     * @param properties The property map to use. Defaults to the system properties.
-     * @param channelConfigurer A function to configure the gRPC channel. Defaults to [DEFAULT_CHANNEL_CONFIGURER].
-     */
-    constructor(
-        properties: Map<String, String> = System.getProperties()
-            .map { it.key.toString() to it.value.toString() }
-            .toMap(),
-        channelConfigurer: ChannelConfigurer = DEFAULT_CHANNEL_CONFIGURER
-    ) : this(
-        properties[PLUGIN_PROPERTY] ?: PLUGIN_PROPERTY_DEFAULT,
-        properties[SERVER_PORT_PROPERTY]?.toInt() ?: 9090,
-        properties[HOST_PROPERTY],
-        properties[PORT_PROPERTY]?.toInt(),
-        channelConfigurer
-    )
+    private val pluginPreference: String = pluginPreference.lowercase()
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -184,8 +166,8 @@ class ServerContext(
     companion object {
         const val PLUGIN_PROPERTY = "pi4j.plugin"
         const val PLUGIN_PROPERTY_DEFAULT = "auto"
-        const val HOST_PROPERTY = "pi4j.grpc.host"
-        const val PORT_PROPERTY = "pi4j.grpc.port"
+        const val PROXY_HOST_PROPERTY = "pi4j.grpc.host"
+        const val PROXY_PORT_PROPERTY = "pi4j.grpc.port"
         const val SERVER_PORT_PROPERTY = "pi4j.server.port"
 
         /**

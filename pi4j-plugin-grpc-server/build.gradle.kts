@@ -38,6 +38,11 @@ application {
     )
 }
 
+tasks.withType<CreateStartScripts>().configureEach {
+    // `defaultJvmOpts` is what the generated bin/* scripts will use
+    defaultJvmOpts = application.applicationDefaultJvmArgs
+}
+
 tasks.withType<ShadowJar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     mergeServiceFiles()

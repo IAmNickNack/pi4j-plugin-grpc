@@ -116,7 +116,7 @@ Auto-detection can be overridden by providing the `pi4j.plugin` system property:
 * `-Dpi4j.plugin=ffm`: forces the FFM plugin to be loaded
 * `-Dpi4j.plugin=mock`: loads the mock plugin. This can be useful for testing and allows the server to run on machines
 with no GPIO access.
-* `-Dpi4j.plugin.grpc -Dpi4j.grpc.server=<hostname> -Dpi4j.grpc.port=<port>`: starts the server as a proxy to another
+* `-Dpi4j.plugin=grpc -Dpi4j.grpc.server=<hostname> -Dpi4j.grpc.port=<port>`: starts the server as a proxy to another
 server instance. The utility of this is slightly questionable ;)
 
 ## Examples
