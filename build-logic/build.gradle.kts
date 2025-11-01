@@ -15,3 +15,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
     implementation("com.google.protobuf:protobuf-gradle-plugin:0.9.5")
 }
+
+kotlin {
+    jvmToolchain(24)
+}
