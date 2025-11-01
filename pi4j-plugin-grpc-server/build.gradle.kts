@@ -14,7 +14,7 @@ dependencies {
     implementation(libs.pi4j.core)
     implementation(libs.pi4j.plugin.ffm)
     implementation(libs.pi4j.plugin.mock)
-    runtimeOnly(libs.logback.classic)
+    implementation(libs.logback.classic)
     testImplementation(libs.grpc.testing)
 }
 
