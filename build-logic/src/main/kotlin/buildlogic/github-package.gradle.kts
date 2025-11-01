@@ -21,8 +21,7 @@ publishing {
             groupId = project.group as String
             artifactId = project.name
             version = project.version as String
-            // Only publish the standard JAR. No shadow jars
-            artifact(tasks.named<Jar>("jar").get())
+            from(components["java"])
         }
     }
 }
