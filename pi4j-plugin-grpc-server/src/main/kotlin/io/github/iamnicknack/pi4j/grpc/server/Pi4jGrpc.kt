@@ -1,8 +1,11 @@
 package io.github.iamnicknack.pi4j.grpc.server
 
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.LoggerContext
 import io.github.iamnicknack.pi4j.grpc.server.config.ServerContext
 import io.github.iamnicknack.pi4j.grpc.server.config.args.CommandLineArgument
 import io.github.iamnicknack.pi4j.grpc.server.config.args.CommandLineParser
+import org.slf4j.LoggerFactory
 
 private val pluginArg = CommandLineArgument(
     "plugin",
@@ -26,6 +29,11 @@ private val proxyPortArg = CommandLineArgument(
     systemProperty = ServerContext.PROXY_PORT_PROPERTY,
     description = "The port of the remote pi4j server when running as a proxy"
 )
+private val debugArg = CommandLineArgument(
+    "debug",
+    isFlag = true,
+    description = "Additional logging of IO activity"
+)
 private val helpArg = CommandLineArgument(
     "help",
     isFlag = true,
@@ -37,8 +45,18 @@ private val parser = CommandLineParser.Builder()
     .arg(portArg)
     .arg(proxyHostArg)
     .arg(proxyPortArg)
+    .arg(debugArg)
     .arg(helpArg)
     .build()
+
+/**
+ * Allow the log level to be set based on command line arguments
+ */
+fun setServiceLogLevel(level: String) {
+    val ctx = LoggerFactory.getILoggerFactory() as LoggerContext
+    ctx.getLogger("io.github.iamnicknack.pi4j.grpc").level = Level.toLevel(level)
+
+}
 
 fun main(args: Array<String>) {
     val commandLineArgs = parser.parse(args)
@@ -46,6 +64,10 @@ fun main(args: Array<String>) {
     if (commandLineArgs.flag(helpArg.name)) {
         parser.help(System.out)
     } else {
+        if (commandLineArgs.flag(debugArg.name)) {
+            setServiceLogLevel("DEBUG")
+        }
+
         ServerContext(
             commandLineArgs.value<String>(pluginArg.name),
             commandLineArgs.value<Int>(portArg.name),

@@ -12,5 +12,5 @@
     </root>
 
     <logger name="com.pi4j" level="INFO" />
-    <logger name="io.github.iamnicknack" level="DEBUG" />
+    <logger name="io.github.iamnicknack.pi4j.grpc" level="INFO" />
 </configuration>
