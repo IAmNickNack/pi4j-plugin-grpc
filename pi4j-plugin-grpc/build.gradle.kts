@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.pi4j.core)
+    api(libs.pi4j.core)
     compileOnly(libs.jakarta.annotation)
 
     testImplementation(project(":pi4j-plugin-grpc-server"))
