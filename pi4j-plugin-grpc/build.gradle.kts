@@ -7,10 +7,11 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.pi4j)
-    implementation(libs.jakarta.annotation)
+    implementation(libs.pi4j.core)
+    compileOnly(libs.jakarta.annotation)
 
     testImplementation(project(":pi4j-plugin-grpc-server"))
+    testImplementation(libs.pi4j.plugin.mock)
     testImplementation(libs.grpc.testing)
     testImplementation(libs.kotlin.coroutines.core)
     testImplementation(libs.protobuf.kotlin)
