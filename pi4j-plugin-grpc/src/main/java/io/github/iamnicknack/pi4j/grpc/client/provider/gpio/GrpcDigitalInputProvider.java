@@ -21,6 +21,7 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
     public GrpcDigitalInputProvider(Channel channel) {
+        super("grpc-digital-input");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }

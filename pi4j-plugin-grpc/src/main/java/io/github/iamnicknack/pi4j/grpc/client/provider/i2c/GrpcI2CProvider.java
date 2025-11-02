@@ -23,6 +23,7 @@ public class GrpcI2CProvider extends I2CProviderBase {
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
     public GrpcI2CProvider(Channel channel) {
+        super("grpc-i2c");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }

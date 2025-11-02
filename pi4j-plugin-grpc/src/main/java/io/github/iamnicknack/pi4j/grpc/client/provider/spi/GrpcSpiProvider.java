@@ -23,6 +23,7 @@ public class GrpcSpiProvider extends SpiProviderBase {
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
     public GrpcSpiProvider(Channel channel) {
+        super("grpc-spi");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }

@@ -55,7 +55,6 @@ private val parser = CommandLineParser.Builder()
 fun setServiceLogLevel(level: String) {
     val ctx = LoggerFactory.getILoggerFactory() as LoggerContext
     ctx.getLogger("io.github.iamnicknack.pi4j.grpc").level = Level.toLevel(level)
-
 }
 
 fun main(args: Array<String>) {
