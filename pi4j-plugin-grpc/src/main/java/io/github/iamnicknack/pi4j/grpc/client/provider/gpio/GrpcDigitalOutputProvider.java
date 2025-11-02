@@ -20,6 +20,7 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
     public GrpcDigitalOutputProvider(Channel channel) {
+        super("grpc-digital-output");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }

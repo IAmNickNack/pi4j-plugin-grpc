@@ -23,6 +23,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
     public GrpcPwmProvider(Channel channel) {
+        super("grpc-pwm");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
