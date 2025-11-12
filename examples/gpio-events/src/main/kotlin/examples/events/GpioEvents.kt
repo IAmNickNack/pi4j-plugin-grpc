@@ -49,7 +49,7 @@ class GpioEvents : AutoCloseable {
     val output: DigitalOutput = pi4j.create(
         DigitalOutput.newConfigBuilder(pi4j)
             .id("test-output")
-            .address(5)
+            .bcm(5)
             .shutdown(DigitalState.LOW)
             .build()
     )

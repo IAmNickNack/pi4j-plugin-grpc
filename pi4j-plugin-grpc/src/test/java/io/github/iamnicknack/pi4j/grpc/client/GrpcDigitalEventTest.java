@@ -17,7 +17,7 @@ public class GrpcDigitalEventTest {
         var device = localPi4j.create(
                 DigitalOutput.newConfigBuilder(localPi4j)
                         .id("test-output")
-                        .address(4)
+                        .bcm(4)
                         .initial(DigitalState.LOW)
                         .build()
         );
