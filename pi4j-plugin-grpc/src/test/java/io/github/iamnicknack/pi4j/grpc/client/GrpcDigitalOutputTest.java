@@ -70,7 +70,7 @@ class GrpcDigitalOutputTest {
         return pi4j.create(
                 DigitalOutput.newConfigBuilder(pi4j)
                         .id("test-output")
-                        .address(4)
+                        .bcm(4)
                         .initial(DigitalState.LOW)
                         .build()
         );

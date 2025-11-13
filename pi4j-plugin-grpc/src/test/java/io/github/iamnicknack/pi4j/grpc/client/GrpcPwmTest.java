@@ -67,7 +67,7 @@ class GrpcPwmTest {
     private Pwm createTestDevice(Context pi4j) {
         return pi4j.create(Pwm.newConfigBuilder(pi4j)
                 .id("test-pwm")
-                .address(4)
+                .channel(4)
                 .frequency(440)
                 .dutyCycle(50)
                 .build()

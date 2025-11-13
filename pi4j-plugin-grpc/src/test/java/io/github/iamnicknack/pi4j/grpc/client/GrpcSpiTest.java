@@ -74,7 +74,7 @@ class GrpcSpiTest {
         return pi4j.create(
                 Spi.newConfigBuilder(pi4j)
                         .id("test-spi")
-                        .address(1)
+                        .channel(1)
                         .build()
         );
     }
