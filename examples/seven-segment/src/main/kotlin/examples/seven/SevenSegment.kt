@@ -65,7 +65,7 @@ class SevenSegment : AutoCloseable {
         DigitalOutput.newConfigBuilder(pi4j)
             .id("reset")
             .name("Reset Pin")
-            .address(5)
+            .bcm(5)
             .shutdown(DigitalState.LOW)
             .initial(DigitalState.HIGH)
             .build()
@@ -79,8 +79,8 @@ class SevenSegment : AutoCloseable {
 //            .address(2)
 //            .busNumber(0)
             // v4
-            .address(0)
-            .busNumber(2)
+            .channel(0)
+            .bus(2)
             .pwmType(PwmType.HARDWARE)
             .frequency(220)
             .dutyCycle(50)
@@ -95,7 +95,7 @@ class SevenSegment : AutoCloseable {
             .baud(1000000)
             .bus(SpiBus.getByNumber(1))
             .mode(SpiMode.MODE_0)
-            .address(0)
+            .channel(0)
             .build()
     )
 

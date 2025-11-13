@@ -63,7 +63,7 @@ class GrpcDigitalInputTest {
         return pi4j.create(
                 DigitalInput.newConfigBuilder(pi4j)
                         .id("test-input")
-                        .address(4)
+                        .bcm(4)
                         .build()
         );
     }

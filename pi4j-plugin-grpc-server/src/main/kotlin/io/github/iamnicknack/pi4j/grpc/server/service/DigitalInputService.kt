@@ -35,7 +35,7 @@ class DigitalInputService(
         val device = pi4j.deviceOrThrow(request.deviceId, DigitalInput::class.java)
         val listener = DigitalStateChangeListener { event ->
             if (logger.isDebugEnabled) {
-                logger.debug("Digital input state changed: {} ({}) = {}", event.source().name, event.source().address, event.state())
+                logger.debug("Digital input state changed: {} ({}) = {}", event.source().name, event.source().bcm(), event.state())
             }
 
             val state = event.state().asDeviceState()

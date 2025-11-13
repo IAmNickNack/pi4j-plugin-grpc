@@ -67,7 +67,7 @@ class BasicI2C : AutoCloseable {
     val reset: DigitalOutput = pi4j.create(
         DigitalOutput.newConfigBuilder(pi4j)
             .id("mcp-reset")
-            .address(17)
+            .bcm(17)
             .initial(DigitalState.HIGH)
             .shutdown(DigitalState.LOW)
             .build()
