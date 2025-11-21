@@ -56,6 +56,7 @@ public class GrpcPlugin implements Plugin {
     @Override
     public void shutdown(Context context) throws ShutdownException {
         if (channel != null) {
+            logger.info("Shutting down gRPC channel");
             channel.shutdown();
         }
         Plugin.super.shutdown(context);

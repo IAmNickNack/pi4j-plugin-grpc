@@ -75,12 +75,8 @@ class SevenSegment : AutoCloseable {
         Pwm.newConfigBuilder(pi4j)
             .id("refresh")
             .name("Refresh PWM")
-            // v3
-//            .address(2)
-//            .busNumber(0)
-            // v4
-            .channel(0)
-            .bus(2)
+            .channel(2)
+            .chip(0)
             .pwmType(PwmType.HARDWARE)
             .frequency(220)
             .dutyCycle(50)
