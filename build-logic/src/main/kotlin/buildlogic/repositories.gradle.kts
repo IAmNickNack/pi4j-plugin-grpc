@@ -1,9 +1,5 @@
 package buildlogic
 
-//plugins {
-//    `maven-publish`
-//}
-
 repositories {
     mavenCentral()
     mavenLocal()
