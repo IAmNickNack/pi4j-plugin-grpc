@@ -6,8 +6,8 @@ import com.pi4j.io.gpio.digital.DigitalOutput
 import com.pi4j.io.gpio.digital.DigitalState
 import com.pi4j.io.i2c.I2C
 import com.pi4j.io.i2c.I2CImplementation
-import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.i2c.I2CFFMProviderImpl
+import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl
 import io.github.iamnicknack.pi4j.grpc.client.GrpcHostAndPort
@@ -44,8 +44,8 @@ class BasicI2C : AutoCloseable {
             }
             "ffm" -> {
                 Pi4J.newContextBuilder()
-                    .add(DigitalOutputFFMProviderImpl())
-                    .add(I2CFFMProviderImpl())
+                    .add(FFMDigitalOutputProviderImpl())
+                    .add(FFMI2CProviderImpl())
                     .build()
             }
             else -> Pi4J.newContextBuilder()

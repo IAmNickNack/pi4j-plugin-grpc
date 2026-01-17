@@ -3,11 +3,11 @@ package io.github.iamnicknack.pi4j.grpc.server.config
 import com.pi4j.Pi4J
 import com.pi4j.boardinfo.util.BoardInfoHelper
 import com.pi4j.context.Context
-import com.pi4j.plugin.ffm.providers.gpio.DigitalInputFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.i2c.I2CFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.pwm.PwmFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.spi.SpiFFMProviderImpl
+import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl
+import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl
+import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl
+import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl
+import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl
@@ -82,11 +82,11 @@ class ServerContext(
                     if (!it) logger.warn("Cannot load FFM. Compatible device not present")
                 } -> {
                 builder
-                    .add(DigitalInputFFMProviderImpl())
-                    .add(DigitalOutputFFMProviderImpl())
-                    .add(I2CFFMProviderImpl())
-                    .add(SpiFFMProviderImpl())
-                    .add(PwmFFMProviderImpl())
+                    .add(FFMDigitalInputProviderImpl())
+                    .add(FFMDigitalOutputProviderImpl())
+                    .add(FFMI2CProviderImpl())
+                    .add(FFMSpiProviderImpl())
+                    .add(FFMPwmProviderImpl())
                     .build()
             }
             "grpc" if (proxyChannel != null)
