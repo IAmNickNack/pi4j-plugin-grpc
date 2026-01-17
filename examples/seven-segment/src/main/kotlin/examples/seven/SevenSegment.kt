@@ -9,9 +9,9 @@ import com.pi4j.io.pwm.PwmType
 import com.pi4j.io.spi.Spi
 import com.pi4j.io.spi.SpiBus
 import com.pi4j.io.spi.SpiMode
-import com.pi4j.plugin.ffm.providers.gpio.DigitalOutputFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.pwm.PwmFFMProviderImpl
-import com.pi4j.plugin.ffm.providers.spi.SpiFFMProviderImpl
+import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl
+import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl
+import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl
 import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl
@@ -49,9 +49,9 @@ class SevenSegment : AutoCloseable {
                     .build()
             }
             "ffm" -> Pi4J.newContextBuilder()
-                .add(DigitalOutputFFMProviderImpl())
-                .add(PwmFFMProviderImpl())
-                .add(SpiFFMProviderImpl())
+                .add(FFMDigitalOutputProviderImpl())
+                .add(FFMPwmProviderImpl())
+                .add(FFMSpiProviderImpl())
                 .build()
             else -> Pi4J.newContextBuilder()
                 .add(MockDigitalOutputProviderImpl())

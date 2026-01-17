@@ -3,17 +3,17 @@
 assertj = "3.27.6"
 assertk = "0.28.1"
 jakarta-annotation = "3.0.0"
-junit = "6.0.1"
+junit = "6.0.2"
 kotlin = "2.3.0"
 kotlin-coroutines = "1.10.2"
-logback = "1.5.23"
+logback = "1.5.24"
 slf4j = "2.0.17"
 
 grpc-core = "1.78.0"
 grpc-kotlin = "1.5.0"
-protobuf = "4.33.2"
+protobuf = "4.33.4"
 
-shadow = "9.3.0"
+shadow = "9.3.1"
 
 pi4j = "4.0.0-SNAPSHOT"
 
