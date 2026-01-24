@@ -13,6 +13,9 @@ import io.grpc.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider for digital input devices over gRPC.
+ */
 public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -20,6 +23,9 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
     private final Channel channel;
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
+    /**
+     * @param channel the gRPC channel to use.
+     */
     public GrpcDigitalInputProvider(Channel channel) {
         super("grpc-digital-input");
         this.channel = channel;

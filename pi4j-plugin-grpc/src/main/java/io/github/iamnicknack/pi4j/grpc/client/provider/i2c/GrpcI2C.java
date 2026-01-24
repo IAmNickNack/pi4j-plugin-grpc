@@ -10,10 +10,18 @@ import io.grpc.Channel;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Implementation of I2C for gRPC.
+ */
 public class GrpcI2C extends I2CBase<GrpcI2C.NoopI2CBus> {
     private final I2CServiceGrpc.I2CServiceBlockingStub deviceStub;
     private final GrpcI2CProvider provider;
 
+    /**
+     * @param channel the gRPC channel to use.
+     * @param provider the provider for this I2C device.
+     * @param config the configuration for this I2C device.
+     */
     public GrpcI2C(
             Channel channel,
             GrpcI2CProvider provider,

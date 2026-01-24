@@ -12,6 +12,9 @@ import io.github.iamnicknack.pi4j.grpc.gen.device.GetDigitalStateRequest;
 import io.grpc.Channel;
 import org.slf4j.Logger;
 
+/**
+ * Implementation of DigitalInput for gRPC.
+ */
 public class GrpcDigitalInput extends DigitalInputBase {
 
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -19,6 +22,11 @@ public class GrpcDigitalInput extends DigitalInputBase {
     private final DigitalInputServiceBlockingStub deviceStub;
     private final GrpcDigitalInputProvider provider;
 
+    /**
+     * @param channel the gRPC channel to use.
+     * @param provider the provider for this digital input.
+     * @param config the configuration for this digital input.
+     */
     public GrpcDigitalInput(
             Channel channel,
             GrpcDigitalInputProvider provider,

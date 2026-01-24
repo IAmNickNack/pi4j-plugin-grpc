@@ -15,6 +15,9 @@ import io.grpc.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider for I2C devices over gRPC.
+ */
 public class GrpcI2CProvider extends I2CProviderBase {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -22,6 +25,9 @@ public class GrpcI2CProvider extends I2CProviderBase {
     private final Channel channel;
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
+    /**
+     * @param channel the gRPC channel to use.
+     */
     public GrpcI2CProvider(Channel channel) {
         super("grpc-i2c");
         this.channel = channel;

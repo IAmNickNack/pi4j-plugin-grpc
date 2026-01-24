@@ -15,6 +15,9 @@ import io.grpc.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provider for PWM devices over gRPC.
+ */
 public class GrpcPwmProvider extends PwmProviderBase {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
@@ -22,6 +25,9 @@ public class GrpcPwmProvider extends PwmProviderBase {
     private final Channel channel;
     private final DeviceConfigServiceGrpc.DeviceConfigServiceBlockingStub configStub;
 
+    /**
+     * @param channel the gRPC channel to use.
+     */
     public GrpcPwmProvider(Channel channel) {
         super("grpc-pwm");
         this.channel = channel;
