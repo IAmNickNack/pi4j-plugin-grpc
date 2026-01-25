@@ -1,159 +1,200 @@
-# Pi4J gRPC Plugin
+# pi4j-plugin-grpc
 
-This plugin intends to provide remote development support for PI4J in the absence of 
-[pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) support for the Raspberry Pi v5. It assumes that convenience 
-is more important than performance during the development phase of a project and intends to make existing Pi4j APIs 
-accessible via gRPC.
+Developing for the Raspberry Pi can present challenges:
 
-Current supported providers extend to:
+* **Do you develop on the actual device or write code locally and transfer artefacts to the device?**
+* **How do you debug application code?** Should you run locally with the mock provider or on the device with real
+  hardware but also have to configure and integrate with a remote debugger?
+* **How do you share code between the device and the host?** Should you use a network file system, a shared folder
+  or an intermediate repository?
 
-* GPIO (with event listeners)
-* PWM
-* I2C
-* SPI
+All of the above and more are possible, but all of them require effort, compromise and additional complications to
+the toolchain that we would probably rather avoid.
 
-The implementation focuses on providing functional client plugins together with a draft  gRPC schema. 
-It is intended either as a functional Pi4J server, or to be used as a starting point for building alternative 
-client or server implementations. 
+Up until the Raspberry Pi 5, [pigpiod](https://abyz.me.uk/rpi/pigpio/pigpiod.html) provided a solution.
+This was a third-party native daemon which could be used together with a set of Pi4J providers to gain remote
+access to GPIO, SPI, i2c, etc. Thanks to high-level abstractions, the providers could run locally and communicate
+with the daemon via a network socket, and the daemon would then forward the calls to the actual hardware.
 
-This project includes a reference implementation of the server application, which uses the existing Pi4j 
-library to provide hardware integration.
+However, due to hardware changes in the Raspberry Pi 5, this solution is no longer available and Pi4J needs a
+replacement. Funnily enough, Pi4J already provides its own hardware integration, so all that's really required are
+client and service layers on top of this.
 
-Schema definitions are contained in
-[./pi4j-plugin-grpc-proto/src/main/proto/pi4j](./pi4j-grpc/pi4j-plugin-grpc-proto/src/main/proto/pi4j)
+The gRCP plugin fills the gap created by the lack of pigpiod and comprises two parts:
 
+* A gRPC server which runs on the device and provides the Pi4J service layer
+* A gRPC provider which connects to the gRPC server and forwards calls to the actual hardware
 
-## Install From Source
+With a server running on a Raspberry Pi and access to IO devices, application development can be done locally,
+with no compromises to the toolchain.
 
-Both the client and server-side components can be built from source for Java 24:
+## Getting started
 
-```bash
-# Clone the repository and build the plugin
-git clone https://github.com/iamnicknack/pi4j-plugin-grpc.git
-# Build the plugin and publish it to the local Maven repository
-./gradlew publishToMavenLocal   
-```
+At the time of writing, Pi4j v4 is under development and available only as a snapshot build. The gRPC plugin
+is optimistically built on top of Pi4J v4.0.0-SNAPSHOT, so it is currently also only available itself as a snapshot
+build.
 
-### Maven
+### Dependency coordinates for Maven
 
 ```xml
 <dependency>
-    <groupId>io.github.iamnicknack.pi4j</groupId>
+    <groupId>io.github.iamnicknack</groupId>
     <artifactId>pi4j-plugin-grpc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
-### Gradle
+### Dependency coordinates for Gradle
 
 ```kotlin
-implementation("io.github.iamnicknack.pi4j:pi4j-plugin-grpc:0.0.1-SNAPSHOT")
+implementation("io.github.iamnicknack:pi4j-plugin-grpc:0.0.1-SNAPSHOT")
 ```
 
-## Install from Github Packages
+### Building from source
 
-Builds are currently published to Github Packages. In order to pull packages using Maven or Gradle, you will need
-to add the registry configuration to your build,
-as documented on Github for Maven [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
-and Gradle [here](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package).
+```shell
+git clone git clone https://github.com/IAmNickNack/pi4j-plugin-grpc.git
+cd pi4j-plugin-grpc
 
-### Gradle Repository Configuration:
+# Build and install the plugin to the local Maven repository:
+./gradlew :pi4j-plugin-grpc:publishToMavenLocal
 
-Gradle allows the use of `exclusiveContent`, meaning that the repository will only be queried for the specified
-packages:
+# Build and install the server distribution:
+./gradlew :pi4j-plugin-grpc-server:installDist
 
-```kotlin
-/**
- * When referencing the package manager for the Github repo, this needs to be configured to:
- * - Authenticate using a Github PAT
- * - Only pull packages contained in that repo
- */
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven {
-                url = uri("https://maven.pkg.github.com/iamnicknack/pi4j-grpc-plugin")
-                credentials {
-                    username = System.getenv("GITHUB_USERNAME")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
-        }
-        filter {
-            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc")
-            includeModule("io.github.iamnicknack.pi4j", "pi4j-plugin-grpc-server")
-        }
-    }
-}
+# Output the current build version:
+./gradlew :pi4j-plugin-grpc:properties -q | grep "version:"
 ```
 
-## Server Implementation
+Update the dependency coordinates in your build configuration to use the snapshot version output by the build.
 
-The server is simply a gRPC proxy exposing the Pi4j library. It is intended to be used in conjunction with the client
-plugin to provide remote development support for projects use Pi4j but do not have access to a Pi4j compatible device.
+### Downloading a pre-built server
 
-A shadow jar will be generated as part of the build output, but is also downloadable from the 
-[repository releases](https://github.com/IAmNickNack/pi4j-plugin-grpc/releases). 
+The latest server builds are available from the [GitHub Releases page](https://github.com/IAmNickNack/pi4j-plugin-grpc/tags)
 
-Once built, as described above, the server can be started by invoking the shadow jar:
+### Running the server
+
+Once downloaded and unzipped, the server can be started using the `bin/pi4j-plugin-grpc-server` script.
 
 ```bash
-./pi4j-plugin-grpc-server/start-server.sh <port>
+./pi4j-plugin-grpc-server/bin/pi4j-plugin-grpc-server
 ```
 
-Alternatively, start the shadow jar:
+If built from source, the server distribution is provided in 
+`./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server`. 
+This contains the `bin/pi4j-plugin-grpc-server` script which can be used to start the server.
 
 ```bash
-java -jar ./pi4j-plugin-grpc-server/build/libs/pi4j-plugin-grpc-server-all.jar
-```
+./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server/bin/pi4j-plugin-grpc-server
+``` 
 
-### Server Plugin Detection
+Running this command with no arguments will start the server on port `9090`.
 
-Unless otherwise specified, the server will start and auto-detect Pi4j plugins. 
+If running on a Raspberry Pi, Pi4J will default to the FFM provider (`pi4j-plugin-ffm`). However, platforms without
+IO access will default to the mock provider (`pi4j-plugin-mock`).
 
 Auto-detection can be overridden by providing the `pi4j.plugin` system property:
 
 * `-Dpi4j.plugin=ffm`: forces the FFM plugin to be loaded
 * `-Dpi4j.plugin=mock`: loads the mock plugin. This can be useful for testing and allows the server to run on machines
-with no GPIO access.
-* `-Dpi4j.plugin=grpc -Dpi4j.grpc.server=<hostname> -Dpi4j.grpc.port=<port>`: starts the server as a proxy to another
-server instance. The utility of this is slightly questionable ;)
+  with no GPIO access.
 
-## Examples
+## Next steps
 
-Examples contained in the `examples` directory should be reasonably self-explanatory and runnable as-is. 
-At least within an IDE.
+The next steps are virtually the same as any other Pi4J application: Add the plugin to your build configuration and
+start writing code. The only slight difference here is that we need to tell the gRCP provider where to connect to.
+Without connection details, the provider will not configure and the provider of the next priority will be loaded
+by Pi4J.
 
-All examples are packaged as executable JARs and can be run directly from the command line after a successful build.
+### Configuration
 
-System properties can be provided to configure the examples depending on the use case:
+Two properties are required in order for the provider to load:
+* `pi4j.grpc.host`: the host name or IP address of the gRPC server
+* `pi4j.grpc.port`: the port on which the gRPC server is listening
 
-* `-Dpi4j.grpc.host` - the host to bind the plugin to
-* `-Dpi4j.grpc.port` - the port to bind the plugin to
-* `-Dpi4j.plugin` - the plugin to use (either `http` or `grpc`). If not provided, defaults to `grpc`. 
-Any other value results in `mock` and runs without any hardware access.
+When providing these values as system properties, system properties need to be added to the Pi4J context:
 
-### Basic I2C
-
-Demonstrates `DigitalOuptut` and `I2C` access.
-
-```bash
-java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/basic-i2c/build/libs/basic-i2c-all.jar
+```java
+var pi4j = Pi4J.newContextBuilder()
+        .properties(System.getProperties())
+        .autoDetect()
+        .build();
 ```
 
-### Gpio Events
+Similarly, they also need to be added to the context if they are being provided by other application code:
 
-Demonstrates `DigitalOuptut` access with event listeners.
-
-```bash
-java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/gpio-events/build/libs/gpio-events-all.jar
+```java
+var pi4j = Pi4J.newContextBuilder()
+        .property("pi4j.grpc.host", "localhost")
+        .property("pi4j.grpc.port", "9090")
+        .autoDetect()
+        .build();
 ```
 
-### Seven Segment
+As mentioned earlier, the gRPC provider does not assume any default values. Without these properties, the provider
+will not configure and the provider of the next priority will be loaded.
 
-Demonstrates `DigitalOuptut`, `Pwm` and `Spi` access in the unlikely event that you have same hardware setup as me, 
-this example might display an incrementing counter on a seven-segment display.
+### JBang Example
 
-```bash
-java -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090 -jar ./examples/seven-segment/build/libs/seven-segment-all.jar
+Firstly, we'll start the server locally, without hardware integration, using the Pi4J mock provider with debug enabled
+to see what's happening:
+
+```shell
+./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server/bin/pi4j-plugin-grpc-server --plugin mock --debug
 ```
+
+Then, let's create a simple JBang script called `Pi4JBlinkExample.java` to test the connection:
+
+```java
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
+//REPOS central,snapshots=https://central.sonatype.com/repository/maven-snapshots/
+//DEPS org.slf4j:slf4j-simple:2.0.17
+//DEPS io.github.iamnicknack:pi4j-plugin-grpc:0.0.1-SNAPSHOT
+//JAVA_OPTIONS -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090
+
+import com.pi4j.Pi4J;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalState;
+
+public class Pi4JBlinkExample {
+
+  private static final int PIN_LED = 5;
+
+  public static void main(String[] args) throws Exception {
+
+    var pi4j = Pi4J.newContextBuilder()
+            .properties(System.getProperties())
+            .autoDetect()
+            .build();
+
+    var outputConfig = DigitalOutput.newConfigBuilder(pi4j)
+            .id("led")
+            .name("Blinker")
+            .address(PIN_LED)
+            .shutdown(DigitalState.LOW)
+            .initial(DigitalState.LOW);
+
+    var output = pi4j.create(outputConfig);
+
+    output.addListener(event -> System.out.println("Output state changed: " + event.state()));
+
+    for (int i = 0; i < 10; i++) {
+      output.high();
+      Thread.sleep(500);
+      output.low();
+      Thread.sleep(500);
+    }
+
+    pi4j.shutdown();
+  }
+}
+```
+
+And finally, run the script:
+
+```shell
+jbang Pi4JBlinkExample.java
+```
+
+<img src="assets/mock-server.gif" alt="Mock server" width="1024">

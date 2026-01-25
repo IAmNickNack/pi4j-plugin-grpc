@@ -9,6 +9,9 @@ import io.github.iamnicknack.pi4j.grpc.gen.device.*;
 import io.grpc.Channel;
 import org.slf4j.Logger;
 
+/**
+ * Implementation of DigitalOutput for gRPC.
+ */
 public class GrpcDigitalOutput extends DigitalOutputBase {
 
     private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
@@ -16,6 +19,11 @@ public class GrpcDigitalOutput extends DigitalOutputBase {
     private final DigitalOutputServiceGrpc.DigitalOutputServiceBlockingStub deviceStub;
     private final GrpcDigitalOutputProvider provider;
 
+    /**
+     * @param channel the gRPC channel to use.
+     * @param provider the provider for this digital output.
+     * @param config the configuration for this digital output.
+     */
     public GrpcDigitalOutput(
             Channel channel,
             GrpcDigitalOutputProvider provider,

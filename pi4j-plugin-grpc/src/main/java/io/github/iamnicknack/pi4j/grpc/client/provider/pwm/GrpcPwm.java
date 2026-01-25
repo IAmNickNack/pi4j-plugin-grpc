@@ -12,11 +12,19 @@ import io.github.iamnicknack.pi4j.grpc.gen.device.DeviceIdRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.IntegerDeviceRequest;
 import io.grpc.Channel;
 
+/**
+ * Implementation of Pwm for gRPC.
+ */
 public class GrpcPwm extends PwmBase {
 
     private final PwmServiceGrpc.PwmServiceBlockingStub deviceStub;
     private final GrpcPwmProvider provider;
 
+    /**
+     * @param channel the gRPC channel to use.
+     * @param provider the provider for this PWM device.
+     * @param config the configuration for this PWM device.
+     */
     public GrpcPwm(
             Channel channel,
             GrpcPwmProvider provider,

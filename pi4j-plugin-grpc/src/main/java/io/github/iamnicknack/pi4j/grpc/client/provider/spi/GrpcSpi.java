@@ -10,11 +10,19 @@ import io.github.iamnicknack.pi4j.grpc.gen.device.DataRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.SpiServiceGrpc;
 import io.grpc.Channel;
 
+/**
+ * Implementation of Spi for gRPC.
+ */
 public class GrpcSpi extends SpiBase {
 
     private final SpiServiceGrpc.SpiServiceBlockingStub deviceStub;
     private final GrpcSpiProvider provider;
 
+    /**
+     * @param channel the gRPC channel to use.
+     * @param provider the provider for this SPI device.
+     * @param config the configuration for this SPI device.
+     */
     public GrpcSpi(
             Channel channel,
             GrpcSpiProvider provider,

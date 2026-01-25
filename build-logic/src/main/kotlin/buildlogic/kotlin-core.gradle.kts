@@ -10,7 +10,7 @@ kotlin {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 
-    jvmToolchain(24)
+    jvmToolchain(25)
 }
 
 dependencies {
