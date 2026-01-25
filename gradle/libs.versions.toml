@@ -12,6 +12,7 @@ slf4j = "2.0.17"
 grpc-core = "1.78.0"
 grpc-kotlin = "1.5.0"
 protobuf = "4.33.4"
+protobuf-google = "0.9.6"
 
 publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
@@ -42,6 +43,7 @@ grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc-core" }
 grpc-kotlin-stub = { group = "io.grpc", name = "grpc-kotlin-stub", version.ref = "grpc-kotlin" }
 grpc-inprocess = { group = "io.grpc", name = "grpc-inprocess", version.ref = "grpc-core" }
 
+protobuf-google = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "protobuf-google" }
 protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf" }
