@@ -43,5 +43,8 @@ jobs:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+
         run: |
           source ./.github/scripts/release-operations.sh && do_release
