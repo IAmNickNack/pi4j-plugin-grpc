@@ -13,6 +13,7 @@ grpc-core = "1.78.0"
 grpc-kotlin = "1.5.0"
 protobuf = "4.33.4"
 
+publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
 
 pi4j = "4.0.0-SNAPSHOT"
@@ -47,6 +48,7 @@ protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", ver
 protoc-gen-grpc-java = { group = "io.grpc", name = "protoc-gen-grpc-java", version.ref = "grpc-core" }
 protoc-gen-grpc-kotlin = { group = "io.grpc", name = "protoc-gen-grpc-kotlin", version.ref = "grpc-kotlin" }
 
+publish-vanniktech = { group = "com.vanniktech.maven.publish", name = "com.vanniktech.maven.publish.gradle.plugin", version.ref = "publish-vanniktech" }
 
 [bundles]
 

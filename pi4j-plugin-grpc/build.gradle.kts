@@ -2,7 +2,7 @@ plugins {
     id("buildlogic.repositories")
     id("buildlogic.grpc.grpc-java")
     id("buildlogic.test.test-java")
-    id("buildlogic.github-package")
+    id("buildlogic.maven-publish")
     `java-library`
 }
 

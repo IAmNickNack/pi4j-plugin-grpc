@@ -71,7 +71,18 @@ upload_github_packages() {
 do_release() {
   if can_release; then
     create_github_release && \
-      ./gradlew :pi4j-plugin-grpc:publishMavenPublicationToGitHubPackagesRepository && \
+      ./gradlew :pi4j-plugin-grpc:publishToMavenCentral && \
       upload_github_packages
+  fi
+}
+
+release_summary() {
+  if [ ${GITHUB_STEP_SUMMARY} ]; then
+    echo '# Release summary' >> $GITHUB_STEP_SUMMARY
+    echo '```' >> $GITHUB_STEP_SUMMARY
+    gh release view "v${BUILD_VERSION}" >> $GITHUB_STEP_SUMMARY
+    echo '```' >> $GITHUB_STEP_SUMMARY
+  else
+    gh release view "v${BUILD_VERSION}"
   fi
 }
