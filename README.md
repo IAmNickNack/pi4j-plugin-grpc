@@ -68,10 +68,21 @@ cd pi4j-plugin-grpc
 
 Update the dependency coordinates in your build configuration to use the snapshot version output by the build.
 
+### Downloading a pre-built server
+
+The latest server builds are available from the [GitHub Releases page](https://github.com/IAmNickNack/pi4j-plugin-grpc/tags)
+
 ### Running the server
 
-The build also installs a server distribution to the `./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server`
-directory and contains a `bin/pi4j-plugin-grpc-server` script which can be used to start the server.
+Once downloaded and unzipped, the server can be started using the `bin/pi4j-plugin-grpc-server` script.
+
+```bash
+./pi4j-plugin-grpc-server/bin/pi4j-plugin-grpc-server
+```
+
+If built from source, the server distribution is provided in 
+`./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server`. 
+This contains the `bin/pi4j-plugin-grpc-server` script which can be used to start the server.
 
 ```bash
 ./pi4j-plugin-grpc-server/build/install/pi4j-plugin-grpc-server/bin/pi4j-plugin-grpc-server
