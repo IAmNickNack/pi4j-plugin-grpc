@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up JDK 24
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '24'
@@ -35,7 +35,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          ./gradlew --configuration-cache build
+          ./gradlew --configuration-cache build 
 
       - name: Do Release
         if: github.ref == 'refs/heads/main' || github.event.inputs.manual_release == 'true'
@@ -44,5 +44,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
         run: |
-          ./gradlew --configuration-cache publish
-          ./.github/scripts/perform-release.sh
+          source ./.github/scripts/release-operations.sh && do_release
