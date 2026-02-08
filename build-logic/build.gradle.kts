@@ -15,6 +15,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
     implementation(libs.protobuf.google)
     implementation(libs.publish.vanniktech)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib") {
+        version {
+            // force stdlib to avoid confusion with transitive dependencies
+            strictly(libs.versions.kotlin.asProvider().get())
+        }
+    }
 }
 
 kotlin {
