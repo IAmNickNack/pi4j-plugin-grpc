@@ -1,6 +1,5 @@
 rootProject.name = "pi4j-plugin-grpc"
 
-// GRPC
 include(":pi4j-plugin-grpc")
 include(":pi4j-plugin-grpc-server")
 
