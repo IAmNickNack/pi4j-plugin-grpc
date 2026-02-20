@@ -3,7 +3,7 @@
 assertj = "3.27.7"
 assertk = "0.28.1"
 jakarta-annotation = "3.0.0"
-junit = "6.0.2"
+junit = "6.0.3"
 kotlin = "2.3.10"
 kotlin-coroutines = "1.10.2"
 logback = "1.5.28"
@@ -17,7 +17,7 @@ protobuf-google = "0.9.6"
 publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
 
-pi4j = "4.0.0-SNAPSHOT"
+pi4j = "4.0.0"
 
 [libraries]
 
