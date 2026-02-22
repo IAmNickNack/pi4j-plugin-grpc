@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export BUILD_VERSION=$(./gradlew :pi4j-plugin-grpc:properties -q | grep 'version:' | awk '{print $2}')
+export BUILD_VERSION=$(./gradlew :pi4j-plugin-grpc:properties -q | grep '^version:' | awk '{print $2}')
 export DIST_ZIP=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}.zip")
 export SHADOW_JAR=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}-all.jar")
 
