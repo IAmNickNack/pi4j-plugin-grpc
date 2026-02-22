@@ -30,24 +30,20 @@ with no compromises to the toolchain.
 
 ## Getting started
 
-At the time of writing, Pi4j v4 is under development and available only as a snapshot build. The gRPC plugin
-is optimistically built on top of Pi4J v4.0.0-SNAPSHOT, so it is currently also only available itself as a snapshot
-build.
-
 ### Dependency coordinates for Maven
 
 ```xml
 <dependency>
     <groupId>io.github.iamnicknack</groupId>
     <artifactId>pi4j-plugin-grpc</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
 ### Dependency coordinates for Gradle
 
 ```kotlin
-implementation("io.github.iamnicknack:pi4j-plugin-grpc:0.0.1-SNAPSHOT")
+implementation("io.github.iamnicknack:pi4j-plugin-grpc:0.1.0")
 ```
 
 ### Building from source
