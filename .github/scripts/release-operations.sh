@@ -4,6 +4,10 @@ export BUILD_VERSION=$(./gradlew :pi4j-plugin-grpc:properties -q | grep '^versio
 export DIST_ZIP=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}.zip")
 export SHADOW_JAR=$(find . -name "pi4j-plugin-grpc-server-${BUILD_VERSION}-all.jar")
 
+strip_snapshot() {
+  export BUILD_VERSION="${BUILD_VERSION%-SNAPSHOT}"
+}
+
 # `true` if BUILD_VERSION ends with `SNAPSHOT`
 is_snapshot() {
   [[ "${BUILD_VERSION}" == *SNAPSHOT ]]

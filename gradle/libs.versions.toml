@@ -4,20 +4,20 @@ assertj = "3.27.7"
 assertk = "0.28.1"
 jakarta-annotation = "3.0.0"
 junit = "6.0.3"
-kotlin = "2.3.10"
-kotlin-coroutines = "1.10.2"
+kotlin = "2.3.21"
+kotlin-coroutines = "1.11.0"
 logback = "1.5.32"
-slf4j = "2.0.17"
+slf4j = "2.0.18"
 
-grpc-core = "1.79.0"
+grpc-core = "1.81.0"
 grpc-kotlin = "1.5.0"
-protobuf = "4.34.0"
-protobuf-google = "0.9.6"
+protobuf = "4.35.0"
+protobuf-google = "0.10.0"
 
 publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
 
-pi4j = "4.0.0"
+pi4j = "4.0.1"
 
 [libraries]
 
