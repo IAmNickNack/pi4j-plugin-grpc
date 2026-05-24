@@ -3,6 +3,7 @@
 //REPOS central,snapshots=https://central.sonatype.com/repository/maven-snapshots/
 //DEPS org.slf4j:slf4j-simple:2.0.17
 //DEPS io.github.iamnicknack:pi4j-plugin-grpc:0.0.1-SNAPSHOT
+//DEPS com.pi4j:pi4j-plugin-mock:4.0.1
 //JAVA_OPTIONS -Dpi4j.grpc.host=localhost -Dpi4j.grpc.port=9090
 
 import com.pi4j.Pi4J;
