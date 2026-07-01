@@ -2,11 +2,12 @@
 
 assertj = "3.27.7"
 assertk = "0.28.1"
+gradle-versions = "0.54.0"
 jakarta-annotation = "3.0.0"
-junit = "6.0.3"
-kotlin = "2.3.21"
+junit = "6.1.1"
+kotlin = "2.4.0"
 kotlin-coroutines = "1.11.0"
-logback = "1.5.32"
+logback = "1.5.37"
 slf4j = "2.0.18"
 
 grpc-core = "1.81.0"
@@ -17,12 +18,13 @@ protobuf-google = "0.10.0"
 publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
 
-pi4j = "4.0.1"
+pi4j = "4.0.2"
 
 [libraries]
 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
+gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradle-versions" }
 jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakarta-annotation" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }

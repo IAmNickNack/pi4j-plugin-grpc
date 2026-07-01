@@ -13,6 +13,7 @@ repositories {
 dependencies {
     api(files(libs.javaClass.protectionDomain.codeSource.location.toURI().toPath()))
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    implementation(libs.gradle.versions)
     implementation(libs.protobuf.google)
     implementation(libs.publish.vanniktech)
     implementation("org.jetbrains.kotlin:kotlin-stdlib") {
