@@ -10,9 +10,9 @@ kotlin-coroutines = "1.11.0"
 logback = "1.5.37"
 slf4j = "2.0.18"
 
-grpc-core = "1.81.0"
+grpc-core = "1.82.1"
 grpc-kotlin = "1.5.0"
-protobuf = "4.35.0"
+protobuf = "4.35.1"
 protobuf-google = "0.10.0"
 
 publish-vanniktech = "0.36.0"
