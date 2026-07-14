@@ -7,6 +7,7 @@ import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl;
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl;
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl;
+import com.pi4j.registry.Registry;
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalInputProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.*;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 /**
  * JUnit 5 extension for running tests with a Pi4J gRPC client.
@@ -28,6 +30,11 @@ import java.lang.annotation.RetentionPolicy;
 public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     private final Channel channel = InProcessChannelBuilder.forName("test").build();
+
+    private final List<Class<?>> supportedParameterTypes = List.of(
+            Context.class,
+            Registry.class
+    );
 
     private Context localPi4j;
 
@@ -82,7 +89,7 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (parameterContext.getParameter().getType() == Context.class) &&
+        return supportedParameterTypes.contains(parameterContext.getParameter().getType()) &&
                 (parameterContext.isAnnotated(Local.class) || parameterContext.isAnnotated(Remote.class));
     }
 
@@ -92,6 +99,10 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
             return localPi4j;
         } else if (parameterContext.isAnnotated(Remote.class) && parameterContext.getParameter().getType() == Context.class ) {
             return remotePi4j;
+        } else if (parameterContext.isAnnotated(Local.class) && Registry.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return localPi4j.registry();
+        } else if (parameterContext.isAnnotated(Remote.class) && Registry.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return remotePi4j.registry();
         }
         throw new ParameterResolutionException("Unsupported parameter type without annotation: " + parameterContext.getParameter().getType());
     }

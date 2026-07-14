@@ -19,7 +19,7 @@ class GrpcSpiTest {
         var remoteDevice = remotePi4j.registry().get(device.id(), Spi.class);
         assertThat(remoteDevice.config().properties()).containsAllEntriesOf(device.config().properties());
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists("test-spi")).isFalse();
         assertThat(remotePi4j.registry().exists("test-spi")).isFalse();
     }

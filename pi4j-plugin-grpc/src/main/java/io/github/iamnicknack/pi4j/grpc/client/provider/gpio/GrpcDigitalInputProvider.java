@@ -56,7 +56,7 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
                 .build();
 
         var device = new GrpcDigitalInput(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

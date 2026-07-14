@@ -26,7 +26,7 @@ class GrpcDigitalInputTest {
 
         assertThat(device.state()).isEqualTo(DigitalState.HIGH);
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists("test-input")).isFalse();
         assertThat(remotePi4j.registry().exists("test-input")).isFalse();
     }

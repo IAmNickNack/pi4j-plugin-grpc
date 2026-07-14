@@ -40,11 +40,6 @@ public class GrpcI2CProvider extends I2CProviderBase {
     }
 
     @Override
-    public I2CProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
-    }
-
-    @Override
     public I2C create(I2CConfig config) {
         logger.info("Creating new I2C device: {}", config.id());
 
@@ -59,7 +54,7 @@ public class GrpcI2CProvider extends I2CProviderBase {
                 .build();
 
         var device = new GrpcI2C(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

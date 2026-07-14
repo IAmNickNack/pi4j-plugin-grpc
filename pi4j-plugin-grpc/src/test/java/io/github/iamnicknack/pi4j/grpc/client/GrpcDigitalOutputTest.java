@@ -26,7 +26,7 @@ class GrpcDigitalOutputTest {
         remoteOutput.mockState(DigitalState.HIGH);
         assertThat(device.state()).isEqualTo(DigitalState.HIGH);
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists("test-output")).isFalse();
         assertThat(remotePi4j.registry().exists("test-output")).isFalse();
     }

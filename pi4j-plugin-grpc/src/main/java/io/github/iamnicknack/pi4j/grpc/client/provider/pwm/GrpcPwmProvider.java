@@ -58,7 +58,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
                 .build();
 
         var device = new GrpcPwm(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

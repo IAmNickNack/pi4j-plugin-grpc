@@ -53,7 +53,7 @@ internal class DeviceConfigServiceForType<
     override suspend fun removeDevice(request: DeviceRequest): Empty {
         logger.info("Removing device with id: ${request.deviceId}")
 
-        pi4j.registry().remove<T>(request.deviceId)
+        pi4j.shutdown<T>(request.deviceId)
         return Empty.getDefaultInstance()
     }
 

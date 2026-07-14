@@ -58,7 +58,7 @@ public class GrpcSpiProvider extends SpiProviderBase {
                 .build();
 
         var device = new GrpcSpi(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

@@ -18,7 +18,7 @@ class GrpcPwmTest {
         var device = createTestDevice(localPi4j);
         assertThat(remotePi4j.registry().exists(device.id())).isTrue();
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists(device.id())).isFalse();
         assertThat(remotePi4j.registry().exists(device.id())).isFalse();
     }

@@ -33,23 +33,23 @@ class PwmService(
 
     override suspend fun setDutyCycle(request: IntegerDeviceRequest): IntegerResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        device.dutyCycle = request.value
+        device.dutyCycle = request.value.toDouble()
         return IntegerResponse.newBuilder().setValue(request.value).build()
     }
 
     override suspend fun getDutyCycle(request: DeviceIdRequest): IntegerResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        return IntegerResponse.newBuilder().setValue(device.dutyCycle).build()
+        return IntegerResponse.newBuilder().setValue(device.dutyCycle.toInt()).build()
     }
 
     override suspend fun setFrequency(request: IntegerDeviceRequest): IntegerResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        device.frequency = request.value
+        device.frequency = request.value.toDouble()
         return IntegerResponse.newBuilder().setValue(request.value).build()
     }
 
     override suspend fun getFrequency(request: DeviceIdRequest): IntegerResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        return IntegerResponse.newBuilder().setValue(device.frequency()).build()
+        return IntegerResponse.newBuilder().setValue(device.frequency().toInt()).build()
     }
 }

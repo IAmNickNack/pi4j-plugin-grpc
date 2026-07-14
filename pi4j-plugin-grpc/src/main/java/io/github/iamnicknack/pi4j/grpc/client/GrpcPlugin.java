@@ -29,8 +29,7 @@ public class GrpcPlugin implements Plugin {
 
     @Override
     public void initialize(PluginService service) throws InitializeException {
-
-        var hostAndPort = GrpcHostAndPort.fromContext(service.context());
+        var hostAndPort = GrpcHostAndPort.fromProperties(System.getProperties());
         if (hostAndPort != null) {
             channel = Grpc
                     .newChannelBuilderForAddress(

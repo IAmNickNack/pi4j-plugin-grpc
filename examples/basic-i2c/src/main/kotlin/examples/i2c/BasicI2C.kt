@@ -3,8 +3,10 @@ package examples.i2c
 import com.pi4j.Pi4J
 import com.pi4j.context.Context
 import com.pi4j.io.gpio.digital.DigitalOutput
+import com.pi4j.io.gpio.digital.DigitalOutputConfig
 import com.pi4j.io.gpio.digital.DigitalState
 import com.pi4j.io.i2c.I2C
+import com.pi4j.io.i2c.I2CConfigBuilder
 import com.pi4j.io.i2c.I2CImplementation
 import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl
 import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl
@@ -56,7 +58,7 @@ class BasicI2C : AutoCloseable {
     }
 
     val i2c: I2C = pi4j.create(
-        I2C.newConfigBuilder(pi4j)
+        I2CConfigBuilder.newInstance()
             .id("mcp23008")
             .bus(1)
             .device(0x20)
@@ -65,7 +67,7 @@ class BasicI2C : AutoCloseable {
     )
 
     val reset: DigitalOutput = pi4j.create(
-        DigitalOutput.newConfigBuilder(pi4j)
+        DigitalOutputConfig.newBuilder()
             .id("mcp-reset")
             .bcm(17)
             .initial(DigitalState.HIGH)

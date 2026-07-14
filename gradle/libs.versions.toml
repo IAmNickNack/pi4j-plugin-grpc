@@ -7,10 +7,10 @@ jakarta-annotation = "3.0.0"
 junit = "6.1.1"
 kotlin = "2.4.0"
 kotlin-coroutines = "1.11.0"
-logback = "1.5.37"
+logback = "1.5.38"
 slf4j = "2.0.18"
 
-grpc-core = "1.82.1"
+grpc-core = "1.82.2"
 grpc-kotlin = "1.5.0"
 protobuf = "4.35.1"
 protobuf-google = "0.10.0"
@@ -18,7 +18,7 @@ protobuf-google = "0.10.0"
 publish-vanniktech = "0.36.0"
 shadow = "9.3.1"
 
-pi4j = "4.0.2"
+pi4j = "5.0.0-SNAPSHOT"
 
 [libraries]
 

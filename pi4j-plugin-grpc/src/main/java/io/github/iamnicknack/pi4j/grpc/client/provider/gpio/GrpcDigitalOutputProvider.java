@@ -50,12 +50,12 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
                 .build();
 
         var response = configStub.createDevice(payload);
-        var responseConfig = DigitalOutput.newConfigBuilder(this.context)
+        var responseConfig = DigitalOutput.newConfigBuilder()
                 .load(response.getConfigMap())
                 .build();
 
         var device = new GrpcDigitalOutput(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

@@ -59,44 +59,4 @@ public record GrpcHostAndPort(
 
         return new GrpcHostAndPort(host, port);
     }
-
-    /**
-     * Derives host and port information from the pi4j context properties.
-     * @param context the pi4j context
-     * @return hosta and port information or null if not found
-     */
-    @Nullable
-    public static GrpcHostAndPort fromContext(Context context) {
-        String host = context.properties().get(GRPC_HOST_PROPERTY);
-        int port = Optional.ofNullable(context.properties().get(GRPC_PORT_PROPERTY))
-                .map(Integer::valueOf)
-                .orElse(0);
-
-        if (host == null || port == 0) {
-            return null;
-        }
-
-        return new GrpcHostAndPort(host, port);
-    }
-
-    /**
-     * Derives host and port information from the pi4j context properties, applying defaults if necessary.
-     * @param context the pi4j context
-     * @param defaultHost the default host address
-     * @param defaultPort the default port number
-     * @return hosta and port information
-     */
-    public static GrpcHostAndPort fromContextWithDefaults(
-            Context context,
-            @Nonnull String defaultHost,
-            @Nonnull Integer defaultPort
-    ) {
-        String host = context.properties().get(GRPC_HOST_PROPERTY,  defaultHost);
-        int port = Optional.of(context.properties().get(GRPC_PORT_PROPERTY))
-                .map(Integer::valueOf)
-                .orElse(defaultPort);
-
-        return new GrpcHostAndPort(host, port);
-    }
-
 }
