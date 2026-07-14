@@ -1,17 +1,15 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.pwm;
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.exception.IOException;
-import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
+import io.github.iamnicknack.pi4j.grpc.gen.device.DoubleDeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.PwmServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.device.BooleanDeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.DeviceIdRequest;
-import io.github.iamnicknack.pi4j.grpc.gen.device.IntegerDeviceRequest;
 import io.grpc.Channel;
 
 /**
@@ -69,9 +67,9 @@ public class GrpcPwm extends PwmBase {
 
     @Override
     public Pwm dutyCycle(double dutyCycle) throws IOException {
-        var request = IntegerDeviceRequest.newBuilder()
+        var request = DoubleDeviceRequest.newBuilder()
                 .setDeviceId(this.id)
-                .setValue((int)dutyCycle)
+                .setValue(dutyCycle)
                 .build();
 
         var result = deviceStub.setDutyCycle(request);
@@ -91,9 +89,9 @@ public class GrpcPwm extends PwmBase {
 
     @Override
     public Pwm frequency(double frequency) throws IOException {
-        var request = IntegerDeviceRequest.newBuilder()
+        var request = DoubleDeviceRequest.newBuilder()
                 .setDeviceId(this.id)
-                .setValue((int)frequency)
+                .setValue(frequency)
                 .build();
         var response = deviceStub.setFrequency(request);
         assert response.getValue() == frequency;

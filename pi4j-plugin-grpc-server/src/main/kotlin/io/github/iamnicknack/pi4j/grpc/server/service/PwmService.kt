@@ -7,8 +7,8 @@ import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProviderImpl
 import io.github.iamnicknack.pi4j.grpc.gen.device.BooleanDeviceRequest
 import io.github.iamnicknack.pi4j.grpc.gen.device.BooleanResponse
 import io.github.iamnicknack.pi4j.grpc.gen.device.DeviceIdRequest
-import io.github.iamnicknack.pi4j.grpc.gen.device.IntegerDeviceRequest
-import io.github.iamnicknack.pi4j.grpc.gen.device.IntegerResponse
+import io.github.iamnicknack.pi4j.grpc.gen.device.DoubleDeviceRequest
+import io.github.iamnicknack.pi4j.grpc.gen.device.DoubleResponse
 import io.github.iamnicknack.pi4j.grpc.gen.device.PwmServiceGrpcKt
 import io.github.iamnicknack.pi4j.grpc.server.Pi4jGrpcExt.deviceOrThrow
 
@@ -31,25 +31,25 @@ class PwmService(
         return BooleanResponse.newBuilder().setValue(device.isOn).build()
     }
 
-    override suspend fun setDutyCycle(request: IntegerDeviceRequest): IntegerResponse {
+    override suspend fun setDutyCycle(request: DoubleDeviceRequest): DoubleResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        device.dutyCycle = request.value.toDouble()
-        return IntegerResponse.newBuilder().setValue(request.value).build()
+        device.dutyCycle = request.value
+        return DoubleResponse.newBuilder().setValue(request.value).build()
     }
 
-    override suspend fun getDutyCycle(request: DeviceIdRequest): IntegerResponse {
+    override suspend fun getDutyCycle(request: DeviceIdRequest): DoubleResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        return IntegerResponse.newBuilder().setValue(device.dutyCycle.toInt()).build()
+        return DoubleResponse.newBuilder().setValue(device.dutyCycle).build()
     }
 
-    override suspend fun setFrequency(request: IntegerDeviceRequest): IntegerResponse {
+    override suspend fun setFrequency(request: DoubleDeviceRequest): DoubleResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        device.frequency = request.value.toDouble()
-        return IntegerResponse.newBuilder().setValue(request.value).build()
+        device.frequency = request.value
+        return DoubleResponse.newBuilder().setValue(request.value).build()
     }
 
-    override suspend fun getFrequency(request: DeviceIdRequest): IntegerResponse {
+    override suspend fun getFrequency(request: DeviceIdRequest): DoubleResponse {
         val device = pi4j.deviceOrThrow(request.deviceId, Pwm::class.java)
-        return IntegerResponse.newBuilder().setValue(device.frequency().toInt()).build()
+        return DoubleResponse.newBuilder().setValue(device.frequency).build()
     }
 }
