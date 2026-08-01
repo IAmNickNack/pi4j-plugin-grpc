@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 @Suppress("FINITE_BOUNDS_VIOLATION_IN_JAVA")
 internal class DeviceConfigServiceForType<
         T : IO<T, C, P>,
-        C : IOConfig<C>,
+        C : IOConfig,
         P : Provider<P, T, C>
         >(
     private val configFactory: ConfigFactory<C>,
