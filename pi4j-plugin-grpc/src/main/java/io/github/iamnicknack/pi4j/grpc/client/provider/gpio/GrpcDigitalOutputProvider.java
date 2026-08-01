@@ -30,6 +30,20 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
+     * is explicitly invoked during {@link Context#shutdown()}
+     */
+    @Override
+    public DigitalOutputProvider shutdownInternal(Context context) throws ShutdownException {
+        return this;
+    }
+
+    /**
+     * Create a new digital output device and be done.
+     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
+     * @return the created digital output device
+     */
     @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         logger.info("Creating new Digital Output device: {}", config.id());
@@ -43,9 +57,7 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcDigitalOutput(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcDigitalOutput(channel, this, responseConfig);
     }
 
     /**

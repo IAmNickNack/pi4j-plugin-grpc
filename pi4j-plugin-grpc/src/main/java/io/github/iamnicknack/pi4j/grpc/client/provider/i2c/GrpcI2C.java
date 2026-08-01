@@ -39,9 +39,29 @@ public class GrpcI2C extends I2CBase<GrpcI2C.NoopI2CBus> {
 
     @Override
     public I2C shutdownInternal(Context context) throws ShutdownException {
+        super.shutdownInternal(context);
         this.provider.removeDevice(this);
         isOpen = false;
-        return super.shutdownInternal(context);
+        return this;
+    }
+
+    /**
+     * Overriding `close` to ensure a recursive call between {@link #shutdownInternal} and {@link #close()}
+     * doesn't result in multiple shutdown invocations
+     * <p>
+     * This appears to be a consequence of {@link #shutdownInternal(Context)} invoking {@link com.pi4j.io.IOBase#close()}
+     * which then invokes {@link Context#shutdown()} which then invokes {@link #shutdownInternal(Context)}
+     * <p>
+     * This could probably be resolved by there being clearer ownership of resources during construction
+     * <p>
+     * Ideally, the mutable state required by {@link #isOpen} shouldn't be required
+     */
+    @Override
+    public void close() {
+        if (isOpen) {
+            this.isOpen = false;
+            super.close();
+        }
     }
 
     /**

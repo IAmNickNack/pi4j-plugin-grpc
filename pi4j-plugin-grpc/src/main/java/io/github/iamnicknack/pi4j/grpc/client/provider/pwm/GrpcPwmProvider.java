@@ -60,9 +60,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcPwm(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcPwm(channel, this, responseConfig);
     }
 
     /**
@@ -70,7 +68,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
      * @param device the device to remove.
      */
     public void removeDevice(Pwm device) {
-        logger.info("Removing SPI device: {}", device.id());
+        logger.info("Removing PWM device: {}", device.config().id());
         var request = DeviceRequest.newBuilder()
                 .setDeviceId(device.config().id())
                 .setDeviceType(DeviceType.PWM)

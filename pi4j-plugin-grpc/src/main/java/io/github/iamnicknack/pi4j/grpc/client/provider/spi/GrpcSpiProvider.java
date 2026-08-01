@@ -1,10 +1,13 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.spi;
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
+import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.io.spi.SpiProviderBase;
-import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
+import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceType;
 import io.grpc.Channel;
@@ -30,6 +33,20 @@ public class GrpcSpiProvider extends SpiProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
+     * is explicitly invoked during {@link Context#shutdown()}
+     */
+    @Override
+    public SpiProvider shutdownInternal(Context context) throws ShutdownException {
+        return this;
+    }
+
+    /**
+     * Create a new SPI device and be done.
+     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
+     * @return the created SPI device
+     */
     @Override
     public Spi create(SpiConfig config) {
         logger.info("Creating new SPI device: {}", config.id());
@@ -43,9 +60,7 @@ public class GrpcSpiProvider extends SpiProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcSpi(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcSpi(channel, this, responseConfig);
     }
 
     /**
