@@ -41,11 +41,13 @@ import java.util.concurrent.Future;
  *     <li>Does not support multiple provider plugins, negating the need to either assess priority or manage
  *     ambiguities via {@link ProviderGroup}s</li>
  *     <li>Does not support initialisation events</li>
+ *     <li>Does not support device registration by other components</li>
  * </ul>
  * @see MinimalContextConfig
  * @see MinimalProviders
  * @see MinimalRegistry
  * @see SimplePluginService
+ * @see #register(IO)
  * @see #removeAllInitializedListeners()
  */
 public class MinimalContext implements Context {
@@ -95,12 +97,11 @@ public class MinimalContext implements Context {
         });
 
         if (config.enableShutdownHook()) {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                runCatching(this::shutdown);
-            }));
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> runCatching(this::shutdown)));
         }
 
         logger.info("Pi4J context/runtime successfully initialized.");
+
     }
 
     @Override
@@ -138,7 +139,6 @@ public class MinimalContext implements Context {
      * @param instance the I/O instance to register
      */
     @Override
-    @Deprecated
     public void register(IO instance) {
         logger.warn("Ignoring attempt to register {} with ID: {} ({}, {})",
                 instance.getClass().getSimpleName(),
@@ -228,7 +228,6 @@ public class MinimalContext implements Context {
      * always be empty.
      */
     @Override
-    @Deprecated(forRemoval = true)
     public Context removeAllInitializedListeners() {
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -237,7 +236,6 @@ public class MinimalContext implements Context {
      * @see removeAllInitializedListeners
      */
     @Override
-    @Deprecated(forRemoval = true)
     public Context addListener(InitializedListener... listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -246,7 +244,6 @@ public class MinimalContext implements Context {
      * @see removeAllInitializedListeners
      */
     @Override
-    @Deprecated(forRemoval = true)
     public Context removeListener(InitializedListener... listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
