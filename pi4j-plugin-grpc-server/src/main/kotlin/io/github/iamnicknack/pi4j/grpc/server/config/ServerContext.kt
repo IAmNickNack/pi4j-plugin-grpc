@@ -18,7 +18,6 @@ import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputPro
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider
-import io.github.iamnicknack.pi4j.grpc.server.config.ServerContext.Companion.DEFAULT_CHANNEL_CONFIGURER
 import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalOutputService
@@ -111,8 +110,7 @@ class ServerContext(
                     .build()
             }
             else -> {
-                logger.info("Auto detecting providers")
-                builder.autoDetect().build()
+                throw IllegalArgumentException("Unknown plugin preference $pluginPreference")
             }
         }
 

@@ -7,27 +7,45 @@ import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl;
 import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl;
 import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl;
 import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl;
+import com.pi4j.registry.Registry;
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalInputProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider;
-import io.github.iamnicknack.pi4j.grpc.server.service.*;
-import io.grpc.Channel;
+import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService;
+import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService;
+import io.github.iamnicknack.pi4j.grpc.server.service.DigitalOutputService;
+import io.github.iamnicknack.pi4j.grpc.server.service.I2CService;
+import io.github.iamnicknack.pi4j.grpc.server.service.PwmService;
+import io.github.iamnicknack.pi4j.grpc.server.service.SpiService;
+import io.grpc.ManagedChannel;
 import io.grpc.Server;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 /**
  * JUnit 5 extension for running tests with a Pi4J gRPC client.
  */
-public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
-    private final Channel channel = InProcessChannelBuilder.forName("test").build();
+    private final ManagedChannel channel = InProcessChannelBuilder.forName("test").build();
+
+    private final List<Class<?>> supportedParameterTypes = List.of(
+            Context.class,
+            Registry.class
+    );
 
     private Context localPi4j;
 
@@ -81,8 +99,13 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
     }
 
     @Override
+    public void afterAll(ExtensionContext context) {
+        channel.shutdown();
+    }
+
+    @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (parameterContext.getParameter().getType() == Context.class) &&
+        return supportedParameterTypes.contains(parameterContext.getParameter().getType()) &&
                 (parameterContext.isAnnotated(Local.class) || parameterContext.isAnnotated(Remote.class));
     }
 
@@ -92,6 +115,10 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
             return localPi4j;
         } else if (parameterContext.isAnnotated(Remote.class) && parameterContext.getParameter().getType() == Context.class ) {
             return remotePi4j;
+        } else if (parameterContext.isAnnotated(Local.class) && Registry.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return localPi4j.registry();
+        } else if (parameterContext.isAnnotated(Remote.class) && Registry.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return remotePi4j.registry();
         }
         throw new ParameterResolutionException("Unsupported parameter type without annotation: " + parameterContext.getParameter().getType());
     }

@@ -6,10 +6,10 @@ import com.pi4j.io.exception.IOException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmBase;
 import com.pi4j.io.pwm.PwmConfig;
+import io.github.iamnicknack.pi4j.grpc.gen.device.DoubleDeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.PwmServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.device.BooleanDeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.device.DeviceIdRequest;
-import io.github.iamnicknack.pi4j.grpc.gen.device.IntegerDeviceRequest;
 import io.grpc.Channel;
 
 /**
@@ -37,9 +37,8 @@ public class GrpcPwm extends PwmBase {
 
     @Override
     public Pwm shutdownInternal(Context context) throws ShutdownException {
-        super.shutdownInternal(context);
         provider.removeDevice(this);
-        return this;
+        return super.shutdownInternal(context);
     }
 
     @Override
@@ -67,8 +66,8 @@ public class GrpcPwm extends PwmBase {
     }
 
     @Override
-    public Pwm dutyCycle(Integer dutyCycle) throws IOException {
-        var request = IntegerDeviceRequest.newBuilder()
+    public Pwm dutyCycle(double dutyCycle) throws IOException {
+        var request = DoubleDeviceRequest.newBuilder()
                 .setDeviceId(this.id)
                 .setValue(dutyCycle)
                 .build();
@@ -80,7 +79,7 @@ public class GrpcPwm extends PwmBase {
     }
 
     @Override
-    public Integer dutyCycle() throws IOException {
+    public double dutyCycle() throws IOException {
         var request = DeviceIdRequest.newBuilder()
                 .setDeviceId(this.id)
                 .build();
@@ -89,8 +88,8 @@ public class GrpcPwm extends PwmBase {
     }
 
     @Override
-    public Pwm frequency(int frequency) throws IOException {
-        var request = IntegerDeviceRequest.newBuilder()
+    public Pwm frequency(double frequency) throws IOException {
+        var request = DoubleDeviceRequest.newBuilder()
                 .setDeviceId(this.id)
                 .setValue(frequency)
                 .build();
@@ -100,7 +99,7 @@ public class GrpcPwm extends PwmBase {
     }
 
     @Override
-    public int frequency() throws IOException {
+    public double frequency() throws IOException {
         var request = DeviceIdRequest.newBuilder()
                 .setDeviceId(this.id)
                 .build();

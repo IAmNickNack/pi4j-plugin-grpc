@@ -2,8 +2,8 @@ package io.github.iamnicknack.pi4j.grpc.client;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInput;
 import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class GrpcDigitalOutputTest {
         remoteOutput.mockState(DigitalState.HIGH);
         assertThat(device.state()).isEqualTo(DigitalState.HIGH);
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists("test-output")).isFalse();
         assertThat(remotePi4j.registry().exists("test-output")).isFalse();
     }
@@ -68,7 +68,7 @@ class GrpcDigitalOutputTest {
 
     private DigitalOutput createTestDevice(Context pi4j) {
         return pi4j.create(
-                DigitalOutput.newConfigBuilder(pi4j)
+                DigitalOutputConfig.newBuilder()
                         .id("test-output")
                         .bcm(4)
                         .initial(DigitalState.LOW)

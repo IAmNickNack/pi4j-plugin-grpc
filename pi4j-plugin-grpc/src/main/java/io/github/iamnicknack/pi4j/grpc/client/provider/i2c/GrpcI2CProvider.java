@@ -1,11 +1,7 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.i2c;
 
-import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
-import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.i2c.I2CProviderBase;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
@@ -35,16 +31,6 @@ public class GrpcI2CProvider extends I2CProviderBase {
     }
 
     @Override
-    public I2CProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
-    @Override
-    public I2CProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
-    }
-
-    @Override
     public I2C create(I2CConfig config) {
         logger.info("Creating new I2C device: {}", config.id());
 
@@ -59,7 +45,7 @@ public class GrpcI2CProvider extends I2CProviderBase {
                 .build();
 
         var device = new GrpcI2C(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

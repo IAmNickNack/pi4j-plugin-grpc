@@ -1,15 +1,13 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.gpio;
 
-import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
-import com.pi4j.io.gpio.digital.*;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalInputConfig;
+import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceType;
 import io.grpc.Channel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +31,6 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
     }
 
     @Override
-    public DigitalInputProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
-    @Override
-    public DigitalInputProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
-    }
-
-    @Override
     public DigitalInput create(DigitalInputConfig config) {
         logger.info("Creating new Digital Input device: {}", config.id());
         var payload = DeviceConfigPayload.newBuilder()
@@ -56,7 +44,7 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
                 .build();
 
         var device = new GrpcDigitalInput(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

@@ -1,7 +1,6 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.pwm;
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
@@ -34,14 +33,13 @@ public class GrpcPwmProvider extends PwmProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
-    @Override
-    public PwmProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
+     * is explicitly invoked during {@link Context#shutdown()}
+     */
     @Override
     public PwmProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
+        return this;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
                 .build();
 
         var device = new GrpcPwm(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

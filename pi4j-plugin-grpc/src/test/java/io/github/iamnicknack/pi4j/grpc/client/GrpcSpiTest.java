@@ -2,6 +2,7 @@ package io.github.iamnicknack.pi4j.grpc.client;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.spi.Spi;
+import com.pi4j.io.spi.SpiConfigBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -19,7 +20,7 @@ class GrpcSpiTest {
         var remoteDevice = remotePi4j.registry().get(device.id(), Spi.class);
         assertThat(remoteDevice.config().properties()).containsAllEntriesOf(device.config().properties());
 
-        localPi4j.registry().remove(device.id());
+        device.close();
         assertThat(localPi4j.registry().exists("test-spi")).isFalse();
         assertThat(remotePi4j.registry().exists("test-spi")).isFalse();
     }
@@ -72,7 +73,7 @@ class GrpcSpiTest {
 
     private Spi createTestDevice(Context pi4j) {
         return pi4j.create(
-                Spi.newConfigBuilder(pi4j)
+                SpiConfigBuilder.newInstance()
                         .id("test-spi")
                         .channel(1)
                         .build()

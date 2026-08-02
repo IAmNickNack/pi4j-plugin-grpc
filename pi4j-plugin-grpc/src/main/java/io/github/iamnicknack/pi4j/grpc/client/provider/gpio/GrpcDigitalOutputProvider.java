@@ -1,7 +1,6 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.gpio;
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.gpio.digital.*;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
@@ -32,16 +31,6 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
     }
 
     @Override
-    public DigitalOutputProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
-    @Override
-    public DigitalOutputProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
-    }
-
-    @Override
     public DigitalOutput create(DigitalOutputConfig config) {
         logger.info("Creating new Digital Output device: {}", config.id());
         var payload = DeviceConfigPayload.newBuilder()
@@ -50,12 +39,12 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
                 .build();
 
         var response = configStub.createDevice(payload);
-        var responseConfig = DigitalOutput.newConfigBuilder(this.context)
+        var responseConfig = DigitalOutput.newConfigBuilder()
                 .load(response.getConfigMap())
                 .build();
 
         var device = new GrpcDigitalOutput(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

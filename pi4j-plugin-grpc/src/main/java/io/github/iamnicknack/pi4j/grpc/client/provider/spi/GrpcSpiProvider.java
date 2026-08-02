@@ -1,14 +1,10 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.spi;
 
-import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
-import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.spi.Spi;
 import com.pi4j.io.spi.SpiConfig;
-import com.pi4j.io.spi.SpiProvider;
 import com.pi4j.io.spi.SpiProviderBase;
-import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
+import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceType;
 import io.grpc.Channel;
@@ -35,16 +31,6 @@ public class GrpcSpiProvider extends SpiProviderBase {
     }
 
     @Override
-    public SpiProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
-    @Override
-    public SpiProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
-    }
-
-    @Override
     public Spi create(SpiConfig config) {
         logger.info("Creating new SPI device: {}", config.id());
         var request = DeviceConfigPayload.newBuilder()
@@ -58,7 +44,7 @@ public class GrpcSpiProvider extends SpiProviderBase {
                 .build();
 
         var device = new GrpcSpi(channel, this, responseConfig);
-        context.registry().add(device);
+        context.register(device);
         return device;
     }
 

@@ -2,6 +2,7 @@ package io.github.iamnicknack.pi4j.grpc.client;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CConfigBuilder;
 import com.pi4j.io.i2c.I2CImplementation;
 import com.pi4j.plugin.mock.provider.i2c.MockI2C;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,8 @@ class GrpcI2CTest {
         assertThat(remotePi4j.registry().exists(device.id())).isTrue();
         assertThat(localPi4j.registry().exists(device.id())).isTrue();
 
-        localPi4j.registry().remove(device.id());
+        localPi4j.shutdown(device);
+
         assertThat(localPi4j.registry().exists(device.id())).isFalse();
         assertThat(remotePi4j.registry().exists(device.id())).isFalse();
     }
@@ -83,7 +85,7 @@ class GrpcI2CTest {
             @Pi4jGrpcExtension.Local Context localPi4j,
             @Pi4jGrpcExtension.Remote Context remotePi4j
     ) {
-        var config = I2C.newConfigBuilder(localPi4j)
+        var config = I2CConfigBuilder.newInstance()
                 .bus(1)
                 .device(0x20)
                 .i2cImplementation(I2CImplementation.DIRECT)
@@ -99,7 +101,7 @@ class GrpcI2CTest {
 
     private I2C createTestDevice(Context pi4j) {
         return pi4j.create(
-                I2C.newConfigBuilder(pi4j)
+                I2CConfigBuilder.newInstance()
                         .id("test-i2c")
                         .device(0x20)
                         .bus(1)
