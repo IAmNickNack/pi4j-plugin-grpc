@@ -1,5 +1,6 @@
 package io.github.iamnicknack.pi4j.grpc.server.context;
 
+import com.pi4j.io.IOConfig;
 import com.pi4j.io.IOType;
 import com.pi4j.io.gpio.digital.DigitalInputProvider;
 import com.pi4j.io.gpio.digital.DigitalOutputProvider;
@@ -35,26 +36,45 @@ public class MinimalProviders implements Providers, Iterable<Provider<?, ?, ?>> 
      */
     private final Map<String, Provider<?, ?, ?>> idIndex = new HashMap<>();
 
+    /**
+     * With only a single plugin, there is no ambiguity about which provider to return.
+     * This negates the need for the {@link ProviderGroup}.
+     * <p>
+     * Also, if the canonical method for constructing a device is via
+     * {@link com.pi4j.context.Context#create(IOConfig, IOType)}, access to a provider instance is not required.
+     */
     @Override
     public ProviderGroup<DigitalInputProvider> digitalInput() {
         throw new UnsupportedOperationException("DigitalInputProvider");
     }
 
+    /**
+     * @see #digitalInput()
+     */
     @Override
     public ProviderGroup<DigitalOutputProvider> digitalOutput() {
         throw new UnsupportedOperationException("DigitalOutputProvider");
     }
 
+    /**
+     * @see #digitalInput()
+     */
     @Override
     public ProviderGroup<PwmProvider> pwm() {
         throw new UnsupportedOperationException("PwmProvider");
     }
 
+    /**
+     * @see #digitalInput()
+     */
     @Override
     public ProviderGroup<SpiProvider> spi() {
         throw new UnsupportedOperationException("SpiProvider");
     }
 
+    /**
+     * @see #digitalInput()
+     */
     @Override
     public ProviderGroup<I2CProvider> i2c() {
         throw new UnsupportedOperationException("I2CProvider");
