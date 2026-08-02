@@ -22,8 +22,8 @@ class GrpcI2CTest {
         assertThat(remotePi4j.registry().exists(device.id())).isTrue();
         assertThat(localPi4j.registry().exists(device.id())).isTrue();
 
-        device.close();
-//        device.shutdownInternal(localPi4j);
+        localPi4j.shutdown(device);
+
         assertThat(localPi4j.registry().exists(device.id())).isFalse();
         assertThat(remotePi4j.registry().exists(device.id())).isFalse();
     }
