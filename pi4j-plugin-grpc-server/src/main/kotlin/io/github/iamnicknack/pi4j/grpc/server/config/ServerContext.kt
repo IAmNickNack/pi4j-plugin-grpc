@@ -4,7 +4,7 @@ import com.pi4j.boardinfo.util.BoardInfoHelper
 import com.pi4j.context.Context
 import com.pi4j.plugin.ffm.FFMPlugin
 import com.pi4j.plugin.mock.MockPlugin
-import io.github.iamnicknack.pi4j.grpc.client.GrpcPlugin
+import io.github.iamnicknack.pi4j.grpc.client.UnmanagedGrpcPlugin
 import io.github.iamnicknack.pi4j.grpc.server.context.MinimalContextBuilder
 import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService
@@ -74,7 +74,7 @@ class ServerContext(
                 .also {
                     if (!it) logger.warn("Cannot configure gRPC")
                 } -> {
-                builder.providerPlugin(GrpcPlugin()).build()
+                builder.providerPlugin(UnmanagedGrpcPlugin(proxyChannel)).build()
             }
             "mock" -> {
                 builder.providerPlugin(MockPlugin()).build()
