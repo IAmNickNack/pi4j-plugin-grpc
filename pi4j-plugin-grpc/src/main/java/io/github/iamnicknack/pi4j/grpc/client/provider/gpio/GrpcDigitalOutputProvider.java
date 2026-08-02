@@ -1,7 +1,6 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.gpio;
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.gpio.digital.*;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
@@ -29,16 +28,6 @@ public class GrpcDigitalOutputProvider extends DigitalOutputProviderBase {
         super("grpc-digital-output");
         this.channel = channel;
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
-    }
-
-    @Override
-    public DigitalOutputProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
-    @Override
-    public DigitalOutputProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
     }
 
     @Override

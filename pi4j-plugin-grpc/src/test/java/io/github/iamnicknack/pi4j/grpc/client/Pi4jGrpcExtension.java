@@ -13,12 +13,23 @@ import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputPro
 import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider;
 import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider;
-import io.github.iamnicknack.pi4j.grpc.server.service.*;
-import io.grpc.Channel;
+import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService;
+import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService;
+import io.github.iamnicknack.pi4j.grpc.server.service.DigitalOutputService;
+import io.github.iamnicknack.pi4j.grpc.server.service.I2CService;
+import io.github.iamnicknack.pi4j.grpc.server.service.PwmService;
+import io.github.iamnicknack.pi4j.grpc.server.service.SpiService;
+import io.grpc.ManagedChannel;
 import io.grpc.Server;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,9 +38,9 @@ import java.util.List;
 /**
  * JUnit 5 extension for running tests with a Pi4J gRPC client.
  */
-public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback, AfterAllCallback, ParameterResolver {
 
-    private final Channel channel = InProcessChannelBuilder.forName("test").build();
+    private final ManagedChannel channel = InProcessChannelBuilder.forName("test").build();
 
     private final List<Class<?>> supportedParameterTypes = List.of(
             Context.class,
@@ -85,6 +96,11 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
         if (remoteDeviceCount > 0) {
             throw new AssertionError("Not all remote devices were not removed after local shutdown: " + remoteDeviceCount);
         }
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) {
+        channel.shutdown();
     }
 
     @Override

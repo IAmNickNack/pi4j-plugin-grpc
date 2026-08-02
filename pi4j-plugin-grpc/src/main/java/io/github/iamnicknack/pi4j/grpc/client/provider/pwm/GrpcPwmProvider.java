@@ -1,7 +1,6 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.pwm;
 
 import com.pi4j.context.Context;
-import com.pi4j.exception.InitializeException;
 import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmConfig;
@@ -34,16 +33,20 @@ public class GrpcPwmProvider extends PwmProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
-    @Override
-    public PwmProvider initialize(Context context) throws InitializeException {
-        return super.initialize(context);
-    }
-
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
+     * is explicitly invoked during {@link Context#shutdown()}
+     */
     @Override
     public PwmProvider shutdownInternal(Context context) throws ShutdownException {
-        return super.shutdownInternal(context);
+        return this;
     }
 
+    /**
+     * Create a new PWM device and be done.
+     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
+     * @return the created PWM device
+     */
     @Override
     public Pwm create(PwmConfig config) {
         logger.info("Creating new PWM device: {}", config.id());

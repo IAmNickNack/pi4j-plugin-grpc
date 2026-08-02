@@ -2,6 +2,7 @@ package io.github.iamnicknack.pi4j.grpc.client;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmConfigBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -65,7 +66,7 @@ class GrpcPwmTest {
     }
 
     private Pwm createTestDevice(Context pi4j) {
-        return pi4j.create(Pwm.newConfigBuilder(pi4j)
+        return pi4j.create(PwmConfigBuilder.newInstance(pi4j)
                 .id("test-pwm")
                 .channel(4)
                 .frequency(440)

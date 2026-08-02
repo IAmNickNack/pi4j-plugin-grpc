@@ -1,7 +1,7 @@
 package io.github.iamnicknack.pi4j.grpc.client;
 
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,7 @@ public class GrpcDigitalEventTest {
     @Test
     void test(@Pi4jGrpcExtension.Local Context localPi4j) throws InterruptedException {
         var device = localPi4j.create(
-                DigitalOutput.newConfigBuilder(localPi4j)
+                DigitalOutputConfig.newBuilder()
                         .id("test-output")
                         .bcm(4)
                         .initial(DigitalState.LOW)
