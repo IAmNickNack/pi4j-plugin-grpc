@@ -31,8 +31,10 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
     }
 
     /**
-     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
-     * is explicitly invoked during {@link Context#shutdown()}
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown invoked
+     * by the base class.
+     * <p>
+     * This allows shutdown to be handled in a more controlled manner by the context.
      */
     @Override
     public DigitalInputProvider shutdownInternal(Context context) throws ShutdownException {

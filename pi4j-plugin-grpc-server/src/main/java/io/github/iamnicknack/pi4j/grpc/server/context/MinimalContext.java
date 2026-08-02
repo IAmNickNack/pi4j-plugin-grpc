@@ -104,6 +104,14 @@ public class MinimalContext implements Context {
 
     }
 
+    /**
+     * Shutdown routine responsible for shutting down all providers and IO devices.
+     *
+     * @see io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalInputProvider#shutdownInternal(Context)
+     * @see io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider#shutdownInternal(Context)
+     * @see io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider#shutdownInternal(Context)
+     * @see io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider#shutdownInternal(Context)
+     */
     @Override
     public Context shutdown() throws ShutdownException {
         if (!this.isShutdown) {
