@@ -42,11 +42,6 @@ public class GrpcPwmProvider extends PwmProviderBase {
         return this;
     }
 
-    /**
-     * Create a new PWM device and be done.
-     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
-     * @return the created PWM device
-     */
     @Override
     public Pwm create(PwmConfig config) {
         logger.info("Creating new PWM device: {}", config.id());

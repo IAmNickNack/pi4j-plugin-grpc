@@ -3,7 +3,7 @@ package examples.i2c
 import com.pi4j.Pi4J
 import com.pi4j.context.Context
 import com.pi4j.io.gpio.digital.DigitalOutput
-import com.pi4j.io.gpio.digital.DigitalOutputConfig
+import com.pi4j.io.gpio.digital.DigitalOutputConfigBuilder
 import com.pi4j.io.gpio.digital.DigitalState
 import com.pi4j.io.i2c.I2C
 import com.pi4j.io.i2c.I2CConfigBuilder
@@ -67,7 +67,7 @@ class BasicI2C : AutoCloseable {
     )
 
     val reset: DigitalOutput = pi4j.create(
-        DigitalOutputConfig.newBuilder()
+        DigitalOutputConfigBuilder.newInstance()
             .id("mcp-reset")
             .bcm(17)
             .initial(DigitalState.HIGH)

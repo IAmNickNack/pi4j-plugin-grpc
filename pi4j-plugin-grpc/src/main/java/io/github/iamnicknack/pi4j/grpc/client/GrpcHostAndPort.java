@@ -1,7 +1,5 @@
 package io.github.iamnicknack.pi4j.grpc.client;
 
-import com.pi4j.context.Context;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Optional;
