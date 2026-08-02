@@ -1,10 +1,13 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.i2c;
 
+import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.i2c.I2CProviderBase;
-import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
+import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceRequest;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceType;
 import io.grpc.Channel;
@@ -30,6 +33,21 @@ public class GrpcI2CProvider extends I2CProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown invoked
+     * by the base class.
+     * <p>
+     * This allows shutdown to be handled in a more controlled manner by the context.
+     */
+    public I2CProvider shutdownInternal(Context context) throws ShutdownException {
+        return this;
+    }
+
+    /**
+     * Create a new I2C device and be done.
+     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
+     * @return the created I2C device
+     */
     @Override
     public I2C create(I2CConfig config) {
         logger.info("Creating new I2C device: {}", config.id());
@@ -44,9 +62,7 @@ public class GrpcI2CProvider extends I2CProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcI2C(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcI2C(channel, this, responseConfig);
     }
 
     /**

@@ -1,18 +1,9 @@
 package io.github.iamnicknack.pi4j.grpc.client;
 
-import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
-import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProviderImpl;
-import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl;
-import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl;
-import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl;
-import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl;
+import com.pi4j.plugin.mock.MockPlugin;
 import com.pi4j.registry.Registry;
-import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalInputProvider;
-import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider;
-import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider;
-import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider;
-import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider;
+import io.github.iamnicknack.pi4j.grpc.server.context.MinimalContextBuilder;
 import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService;
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService;
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalOutputService;
@@ -55,19 +46,11 @@ public class Pi4jGrpcExtension implements BeforeEachCallback, AfterEachCallback,
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        localPi4j = Pi4J.newContextBuilder()
-                .add(new GrpcDigitalInputProvider(channel))
-                .add(new GrpcDigitalOutputProvider(channel))
-                .add(new GrpcI2CProvider(channel))
-                .add(new GrpcSpiProvider(channel))
-                .add(new GrpcPwmProvider(channel))
+        localPi4j = new MinimalContextBuilder()
+                .providerPlugin(new UnmanagedGrpcPlugin(channel))
                 .build();
-        remotePi4j = Pi4J.newContextBuilder()
-                .add(new MockDigitalInputProviderImpl())
-                .add(new MockDigitalOutputProviderImpl())
-                .add(new MockI2CProviderImpl())
-                .add(new MockSpiProviderImpl())
-                .add(new MockPwmProviderImpl())
+        remotePi4j = new MinimalContextBuilder()
+                .providerPlugin(new MockPlugin())
                 .build();
         server = InProcessServerBuilder.forName("test").directExecutor()
                 .addService(new DeviceConfigService(remotePi4j))

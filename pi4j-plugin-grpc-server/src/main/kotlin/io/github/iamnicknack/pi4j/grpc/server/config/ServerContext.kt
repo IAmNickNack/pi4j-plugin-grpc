@@ -1,23 +1,11 @@
 package io.github.iamnicknack.pi4j.grpc.server.config
 
-import com.pi4j.Pi4J
 import com.pi4j.boardinfo.util.BoardInfoHelper
 import com.pi4j.context.Context
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalInputProviderImpl
-import com.pi4j.plugin.ffm.providers.gpio.FFMDigitalOutputProviderImpl
-import com.pi4j.plugin.ffm.providers.i2c.FFMI2CProviderImpl
-import com.pi4j.plugin.ffm.providers.pwm.FFMPwmProviderImpl
-import com.pi4j.plugin.ffm.providers.spi.FFMSpiProviderImpl
-import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalInputProviderImpl
-import com.pi4j.plugin.mock.provider.gpio.digital.MockDigitalOutputProviderImpl
-import com.pi4j.plugin.mock.provider.i2c.MockI2CProviderImpl
-import com.pi4j.plugin.mock.provider.pwm.MockPwmProviderImpl
-import com.pi4j.plugin.mock.provider.spi.MockSpiProviderImpl
-import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalInputProvider
-import io.github.iamnicknack.pi4j.grpc.client.provider.gpio.GrpcDigitalOutputProvider
-import io.github.iamnicknack.pi4j.grpc.client.provider.i2c.GrpcI2CProvider
-import io.github.iamnicknack.pi4j.grpc.client.provider.pwm.GrpcPwmProvider
-import io.github.iamnicknack.pi4j.grpc.client.provider.spi.GrpcSpiProvider
+import com.pi4j.plugin.ffm.FFMPlugin
+import com.pi4j.plugin.mock.MockPlugin
+import io.github.iamnicknack.pi4j.grpc.client.UnmanagedGrpcPlugin
+import io.github.iamnicknack.pi4j.grpc.server.context.MinimalContextBuilder
 import io.github.iamnicknack.pi4j.grpc.server.service.DeviceConfigService
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalInputService
 import io.github.iamnicknack.pi4j.grpc.server.service.DigitalOutputService
@@ -73,41 +61,23 @@ class ServerContext(
     val pi4j: Context by lazy {
         logger.info("Plugin preference: ${this.pluginPreference}")
 
-        val builder = Pi4J.newContextBuilder()
+        val builder = MinimalContextBuilder()
 
         val context = when (this.pluginPreference.lowercase()) {
             "ffm" if BoardInfoHelper.runningOnRaspberryPi()
                 .also {
                     if (!it) logger.warn("Cannot load FFM. Compatible device not present")
                 } -> {
-                builder
-                    .add(FFMDigitalInputProviderImpl())
-                    .add(FFMDigitalOutputProviderImpl())
-                    .add(FFMI2CProviderImpl())
-                    .add(FFMSpiProviderImpl())
-                    .add(FFMPwmProviderImpl())
-                    .build()
+                builder.providerPlugin(FFMPlugin()).build()
             }
             "grpc" if (proxyChannel != null)
                 .also {
                     if (!it) logger.warn("Cannot configure gRPC")
                 } -> {
-                builder
-                    .add(GrpcDigitalInputProvider(proxyChannel))
-                    .add(GrpcDigitalOutputProvider(proxyChannel))
-                    .add(GrpcI2CProvider(proxyChannel))
-                    .add(GrpcSpiProvider(proxyChannel))
-                    .add(GrpcPwmProvider(proxyChannel))
-                    .build()
+                builder.providerPlugin(UnmanagedGrpcPlugin(proxyChannel)).build()
             }
             "mock" -> {
-                builder
-                    .add(MockDigitalInputProviderImpl())
-                    .add(MockDigitalOutputProviderImpl())
-                    .add(MockI2CProviderImpl())
-                    .add(MockSpiProviderImpl())
-                    .add(MockPwmProviderImpl())
-                    .build()
+                builder.providerPlugin(MockPlugin()).build()
             }
             else -> {
                 throw IllegalArgumentException("Unknown plugin preference $pluginPreference")

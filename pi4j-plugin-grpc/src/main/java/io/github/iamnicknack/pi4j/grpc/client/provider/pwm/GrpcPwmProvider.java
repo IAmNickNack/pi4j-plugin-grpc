@@ -34,8 +34,10 @@ public class GrpcPwmProvider extends PwmProviderBase {
     }
 
     /**
-     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown which
-     * is explicitly invoked during {@link Context#shutdown()}
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown invoked
+     * by the base class.
+     * <p>
+     * This allows shutdown to be handled in a more controlled manner by the context.
      */
     @Override
     public PwmProvider shutdownInternal(Context context) throws ShutdownException {
@@ -60,9 +62,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcPwm(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcPwm(channel, this, responseConfig);
     }
 
     /**
@@ -70,7 +70,7 @@ public class GrpcPwmProvider extends PwmProviderBase {
      * @param device the device to remove.
      */
     public void removeDevice(Pwm device) {
-        logger.info("Removing SPI device: {}", device.id());
+        logger.info("Removing PWM device: {}", device.config().id());
         var request = DeviceRequest.newBuilder()
                 .setDeviceId(device.config().id())
                 .setDeviceType(DeviceType.PWM)

@@ -39,9 +39,10 @@ public class GrpcI2C extends I2CBase<GrpcI2C.NoopI2CBus> {
 
     @Override
     public I2C shutdownInternal(Context context) throws ShutdownException {
+        super.shutdownInternal(context);
         this.provider.removeDevice(this);
         isOpen = false;
-        return super.shutdownInternal(context);
+        return this;
     }
 
     /**

@@ -1,8 +1,8 @@
 package io.github.iamnicknack.pi4j.grpc.client.provider.gpio;
 
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalInputConfig;
-import com.pi4j.io.gpio.digital.DigitalInputProviderBase;
+import com.pi4j.context.Context;
+import com.pi4j.exception.ShutdownException;
+import com.pi4j.io.gpio.digital.*;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigPayload;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceConfigServiceGrpc;
 import io.github.iamnicknack.pi4j.grpc.gen.config.DeviceRequest;
@@ -30,6 +30,22 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
         this.configStub = DeviceConfigServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * Override {@link com.pi4j.io.IOBase#shutdownInternal(Context)} to prevent individual device shutdown invoked
+     * by the base class.
+     * <p>
+     * This allows shutdown to be handled in a more controlled manner by the context.
+     */
+    @Override
+    public DigitalInputProvider shutdownInternal(Context context) throws ShutdownException {
+        return this;
+    }
+
+    /**
+     * Create a new digital input device and be done.
+     * @param config the configuration describing the I/O instance to create (address, id, options, etc.)
+     * @return the created digital input device
+     */
     @Override
     public DigitalInput create(DigitalInputConfig config) {
         logger.info("Creating new Digital Input device: {}", config.id());
@@ -43,9 +59,7 @@ public class GrpcDigitalInputProvider extends DigitalInputProviderBase {
                 .load(response.getConfigMap())
                 .build();
 
-        var device = new GrpcDigitalInput(channel, this, responseConfig);
-        context.register(device);
-        return device;
+        return new GrpcDigitalInput(channel, this, responseConfig);
     }
 
     /**
