@@ -27,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ServiceLoader;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -61,10 +59,6 @@ public class MinimalContext implements Context {
     private final EventManager<Context, ShutdownListener, ShutdownEvent> shutdownEventManager =
         new EventManager<>(this, ShutdownListener::onShutdown);
 
-    private final ExecutorService runtimeExecutor = Executors.newSingleThreadScheduledExecutor(runnable ->
-        new Thread(runnable, "Pi4J.RUNTIME")
-    );
-
     private final BoardInfo boardInfo = BoardInfoHelper.current();
 
     private boolean isShutdown = false;
@@ -96,12 +90,7 @@ public class MinimalContext implements Context {
             provider.initialize(this);
         });
 
-        if (config.enableShutdownHook()) {
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> runCatching(this::shutdown)));
-        }
-
         logger.info("Pi4J context/runtime successfully initialized.");
-
     }
 
     /**
@@ -126,8 +115,6 @@ public class MinimalContext implements Context {
                 logger.info("Shutting down IO: {}", io.id());
                 runCatching(() -> io.shutdownInternal(this));
             }
-
-            runtimeExecutor.shutdownNow();
 
             this.isShutdown = true;
 
@@ -208,19 +195,6 @@ public class MinimalContext implements Context {
     }
 
     @Override
-    public Future<?> submitTask(Runnable task) {
-        return runtimeExecutor.submit(task);
-    }
-
-    @Override
-    public Future<Context> asyncShutdown() {
-        return runtimeExecutor.submit(() -> {
-            shutdown();
-            return this;
-        });
-    }
-
-    @Override
     public boolean isShutdown() {
         return isShutdown;
     }
@@ -228,6 +202,26 @@ public class MinimalContext implements Context {
     @Override
     public BoardInfo boardInfo() {
         return boardInfo;
+    }
+
+    /**
+     * This application has no requirement for async task submission.
+     * <p>
+     * If async functionality is required, the application will implement it as required, elsewhere.
+     */
+    @Override
+    public Future<?> submitTask(Runnable task) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * This application has no requirement for async shutdown functionality.
+     * <p>
+     * If async functionality is required, the application will implement it as required, elsewhere.
+     */
+    @Override
+    public Future<Context> asyncShutdown() {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
